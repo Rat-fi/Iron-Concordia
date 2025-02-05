@@ -1,7 +1,13 @@
 from django import forms
-from ..models.DietaryRestrictions import DietaryRestrictions
+from ..models.DietaryRestrictions import DietaryRestrictions,DietaryRestrictions_MealPlan
 
 class DietaryRestrictionsForm(forms.ModelForm):
+    meal_plans = forms.ModelMultipleChoiceField(
+        queryset = DietaryRestrictions_MealPlan.objects.all(),
+        widget = forms.CheckboxSelectMultiple,
+        required = False,
+        help_text = "Select meal plans that fit your dietary restrictions."
+    )
     class Meta:
         model = DietaryRestrictions
         fields = [

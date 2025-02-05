@@ -1,6 +1,22 @@
 <h2>Set Your Dietary Restrictions</h2>
+<p>Select your dietary restrictions below. Your meal plan will be filtered accordingly.</p>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+
+    <h3>Select Meal Plans:</h3>
+    <ul>
+        {% for meal in form.meal_plans.field.queryset %}
+            <li>
+                <label>
+                    <input type="checkbox" name="{{ form.meal_plans.name }}" value="{{ meal.id }}"
+                        {% if meal in form.meal_plans.value %}checked{% endif %}>
+                    {{ meal.name }} - {{ meal.calories }} kcal, {{ meal.protein }}g protein
+                </label>
+            </li>
+        {% endfor %}
+    </ul>
+
     <button type="submit">Save</button>
 </form>
