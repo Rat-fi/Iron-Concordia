@@ -1,0 +1,25 @@
+"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Budget Meal Plan</title>
+</head>
+<body>
+    <h2>Set Your Budget</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+    
+    <h2>Meals</h2>
+    <ul>
+        {% for meal in meals %}
+            <li>{{ meal.name }} - ${{ meal.price }}</li>
+        {% empty %}
+            <li>No meals found within this budget.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+"""
