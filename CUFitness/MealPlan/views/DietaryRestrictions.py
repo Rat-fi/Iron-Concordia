@@ -14,7 +14,7 @@ def set_dietary_restrictions(request):
             return redirect('meal_plan')
     else:
         form = DietaryRestrictionsForm(instance = restrictions)
-    return render(request, 'DietaryRestrictions/set_dietary_restrictions.html', {'form': form})
+    return render(request, 'mealplan/set_dietary_restrictions.html', {'form': form})
     
 
 @login_required
@@ -47,7 +47,7 @@ def meal_plan(request):
     if restrictions.is_poultry_free:
         meals = meals.exclude(contains_poultry=True)
 
-    return render(request, 'DietaryRestrictions/meal_plan.html', {
+    return render(request, 'mealplan/meal_plan.html', {
         'restrictions': restrictions,
         'meals': meals
     })

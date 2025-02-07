@@ -16,4 +16,4 @@ def MealPlan_Searchbar(request):
     page_number = request.GET.get('page')   
     page_obj = paginator.get_page(page_number)  
 
-    return render(request, 'MealPlan_Searchbar/MealPlan_Searchbar.html', {'page_obj': page_obj, 'query': query, 'category': category})
+    return render(request, 'mealplan/MealPlan_Searchbar.html', {'page_obj': page_obj, 'query': query, 'category': category})

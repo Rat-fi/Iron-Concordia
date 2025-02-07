@@ -1,0 +1,22 @@
+
+{% block content %}
+<h2>Quick Meals</h2>
+
+<form method="GET">
+    <label for="prep_time">Max Preparation Time (minutes):</label>
+    <input type="number" name="prep_time" id="prep_time" value="{{ request.GET.prep_time|default:'' }}">
+    <button type="submit">Filter</button>
+</form>
+
+<ul>
+    {% for meal in meals %}
+        <li>
+            <strong>{{ meal.name }}</strong> ({{ meal.preparation_time }} mins)
+            <p>{{ meal.cooking_materials }}</p>
+        </li>
+    {% empty %}
+        <li>No meals found.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
