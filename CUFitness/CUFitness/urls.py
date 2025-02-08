@@ -6,5 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('user/', include('User.urls')),
-    path('', include('ProgressTracking.urls')), #TBD
+    path('progressTracking/', include('ProgressTracking.urls')), #TBD
 ]

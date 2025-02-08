@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from .models import DailyFitnessGoal, Question, GymGoal
 
 from .models import Question
 
@@ -16,12 +18,103 @@ def index(request):
     return HttpResponse(output)
 
 
+@login_required
+def set_daily_fitness_goal(request):
+    context = {'user': request.user}
 
-def setGoal(request, id):
-    # if request.user.is_authenticated:
-    #     return HttpResponse("You logged in")
-    # else:
-    return HttpResponse(f"You need to log in first")
+    #try to fetch data from the databse first to show 
+    try:
+        current_goal = DailyFitnessGoal.objects.get(user=request.user)
+        context.update({
+            'standing_time': current_goal.standing_time,
+            'exercise_minutes': current_goal.exercise_minutes,
+            'walking_distance': current_goal.walking_distance,
+        })
+    except DailyFitnessGoal.DoesNotExist:
+        pass
+
+    if request.method == 'POST':
+        try: 
+            standing_time = float(request.POST.get('standing_time') or 0 )
+            exercise_minutes = float(request.POST.get('exercise_minutes') or 0 )
+            walking_distance = float(request.POST.get('walking_distance') or 0 )
+        except ValueError:
+            context['error'] = "Please enter valid numeric values."
+            return render(request, 'progfressTracking/setFitnessGoal.html', context)
+
+        goal, created = DailyFitnessGoal.objects.update_or_create(
+            user=request.user,
+            defaults={
+                'standing_time': standing_time,
+                'exercise_minutes': exercise_minutes,
+                'walking_distance': walking_distance,
+            }
+        )
+
+        context.update({
+            'standing_time': standing_time,
+            'exercise_minutes': exercise_minutes,
+            'walking_distance': walking_distance,
+        })
+
+    return render(request, 'progressTracking/setFitnessGoal.html', context)
+
+@login_required
+def set_my_gym_goal(request):
+    context = {'user': request.user}
+
+    exercises = [
+        ('cardio', 'Cardio'),
+        ('weight_lifting', 'Weight Lifting'),
+        ('yoga', 'Yoga'),
+        ('pilates', 'Pilates'),
+        ('hiit', 'HIIT'),
+        ('cycling', 'Cycling'),
+        ('swimming', 'Swimming'),
+        ('running', 'Running'),
+        ('rowing', 'Rowing'),
+        ('boxing', 'Boxing'),
+        ('dancing', 'Dancing'),
+        ('strength_training', 'Strength Training'),
+        ('crossfit', 'CrossFit'),
+        ('stretching', 'Stretching'),
+        ('martial_arts', 'Martial Arts'),
+    ]
+    context['exercises'] = exercises
+
+    goals = {}
+
+    try:
+        gym_goal = GymGoal.objects.get(user=request.user)
+    except GymGoal.DoesNotExist:
+        gym_goal = GymGoal(user=request.user)
+
+    if request.method == 'GET':
+        for field, _ in exercises:
+            goals[field] = getattr(gym_goal, field, 0)
+    elif request.method == 'POST':
+        error = None
+        for field, _ in exercises:
+            try:
+                # Use 0 as a default if the input is empty.
+                value = float(request.POST.get(field, 0) or 0)
+            except ValueError:
+                error = "Please enter valid numbers for all fields."
+                break
+            setattr(gym_goal, field, value)
+            goals[field] = value
+        if error:
+            context['error'] = error
+        else:
+            gym_goal.save()
+            context['message'] = "Your gym goals have been updated."
+
+    context['goals'] = goals
+    return render(request, 'progressTracking/setMyGymGoal.html', context)
+
+
+def checkHistoryData(request, id):
+    return HttpResponse(f"history data")
     
 
 def result(request, question_id):

@@ -3,7 +3,9 @@ from . import views
 
 urlpatterns = [
     path('progressTracking/', views.index),
-    path('progressTracking/setGoals/<int:id>/', views.setGoal),
+    path('setDailyFitnessGoals/', views.set_daily_fitness_goal, name='set_goals'),
+    path('setMyGymGoals/', views.set_my_gym_goal, name='set_my_gym_goals'),
+    path('checkHistory/<int:id>/', views.checkHistoryData),
     # path("", views.index, name = "index"),
     path("<int:question_id>/", views.detail, name='detail'),
     path("<int:question_id>/results/", views.result, name="result"),
