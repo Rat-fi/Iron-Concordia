@@ -10,7 +10,8 @@ urlpatterns = [
     path('editRecord/<int:record_id>', views.edit_exercise_record, name='edit_exercise_record'),
     path('removeRecord/<int:record_id>', views.remove_exercise_record, name='remove_exercise_record'),
     path('dailySummary/', views.daily_summary, name='daily_summary'),
-
+    path('weeklySummary/', views.weekly_summary, name='weekly_summary'),
+    path('monthlySummary/', views.monthly_summary, name='monthly_summary'),
 
 
 

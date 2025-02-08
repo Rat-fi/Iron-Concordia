@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Track Your Exercise</title>
-    <!-- Include Bootstrap CSS via CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
       body {
@@ -48,7 +47,6 @@
           </div>
           <div class="form-group text-center">
             <p>Timer: <span id="timer-display">00:00:00</span></p>
-            <!-- Hidden field to store duration in seconds -->
             <input type="hidden" name="duration" id="duration" value="0">
             <button type="button" id="start-btn" class="btn btn-success">Start</button>
             <button type="button" id="stop-btn" class="btn btn-danger" disabled>Stop</button>
@@ -59,7 +57,7 @@
   </div>
 </div>
 
-<!-- JavaScript to handle the timer -->
+
 <script>
   var timerDisplay = document.getElementById('timer-display');
   var startBtn = document.getElementById('start-btn');
@@ -87,16 +85,13 @@
   stopBtn.addEventListener('click', function() {
     clearInterval(timerInterval);
     var elapsed = Date.now() - startTime;
-    // Convert elapsed time to seconds
     var duration = Math.floor(elapsed / 1000);
     durationInput.value = duration;
     stopBtn.disabled = true;
-    // Optionally, automatically submit the form when the timer stops:
     document.getElementById('exercise-form').submit();
   });
 </script>
 
-<!-- Include Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
