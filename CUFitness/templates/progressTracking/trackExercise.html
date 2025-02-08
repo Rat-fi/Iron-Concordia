@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Track Your Exercise</title>
+    <!-- Include Bootstrap CSS via CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      body {
+          background-color: #f8f9fa;
+          padding-top: 30px;
+      }
+      .timer-form {
+          background: #fff;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      #timer-display {
+          font-size: 1.5rem;
+          font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="timer-form">
+        <h1 class="text-center">Track Your Exercise</h1>
+        <p class="text-center">Hello, {{ user.username }}! Select your exercise and use the timer below.</p>
+        
+        {% if message %}
+          <div class="alert alert-success" role="alert">
+            {{ message }}
+          </div>
+        {% endif %}
+        
+        <form method="post" id="exercise-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exercise_type">Exercise Type:</label>
+            <select id="exercise_type" name="exercise_type" class="form-control" required>
+              {% for value, label in exercise_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group text-center">
+            <p>Timer: <span id="timer-display">00:00:00</span></p>
+            <!-- Hidden field to store duration in seconds -->
+            <input type="hidden" name="duration" id="duration" value="0">
+            <button type="button" id="start-btn" class="btn btn-success">Start</button>
+            <button type="button" id="stop-btn" class="btn btn-danger" disabled>Stop</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript to handle the timer -->
+<script>
+  var timerDisplay = document.getElementById('timer-display');
+  var startBtn = document.getElementById('start-btn');
+  var stopBtn = document.getElementById('stop-btn');
+  var durationInput = document.getElementById('duration');
+  var timerInterval;
+  var startTime;
+
+  startBtn.addEventListener('click', function() {
+    startTime = Date.now();
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    timerInterval = setInterval(function(){
+      var elapsed = Date.now() - startTime;
+      var seconds = Math.floor((elapsed / 1000) % 60);
+      var minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+      var hours = Math.floor(elapsed / (1000 * 60 * 60));
+      timerDisplay.textContent = 
+           (hours < 10 ? "0" + hours : hours) + ":" +
+           (minutes < 10 ? "0" + minutes : minutes) + ":" +
+           (seconds < 10 ? "0" + seconds : seconds);
+    }, 1000);
+  });
+
+  stopBtn.addEventListener('click', function() {
+    clearInterval(timerInterval);
+    var elapsed = Date.now() - startTime;
+    // Convert elapsed time to seconds
+    var duration = Math.floor(elapsed / 1000);
+    durationInput.value = duration;
+    stopBtn.disabled = true;
+    // Optionally, automatically submit the form when the timer stops:
+    document.getElementById('exercise-form').submit();
+  });
+</script>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

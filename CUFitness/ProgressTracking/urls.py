@@ -5,6 +5,11 @@ urlpatterns = [
     path('progressTracking/', views.index),
     path('setDailyFitnessGoals/', views.set_daily_fitness_goal, name='set_goals'),
     path('setMyGymGoals/', views.set_my_gym_goal, name='set_my_gym_goals'),
+    path('trackExercise/', views.track_exercise, name='track_exercise'),
+    path('todayRecords/', views.today_exercise_records, name='today_exercise_records'),
+    path('editRecord/<int:record_id>', views.edit_exercise_record, name='edit_exercise_record'),
+    path('removeRecord/<int:record_id>', views.remove_exercise_record, name='remove_exercise_record'),
+
     path('checkHistory/<int:id>/', views.checkHistoryData),
     # path("", views.index, name = "index"),
     path("<int:question_id>/", views.detail, name='detail'),

@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+# from django.contrib.auth.models import User
+# from django.contrib.auth import authenticate, login
+import datetime
 from django.contrib.auth.decorators import login_required
-from .models import DailyFitnessGoal, Question, GymGoal
+from .models import DailyFitnessGoal, Question, GymGoal, ExerciseSession, exercises
 
-from .models import Question
+
 
 # Create your views here.
 def index(request):
@@ -59,27 +60,13 @@ def set_daily_fitness_goal(request):
 
     return render(request, 'progressTracking/setFitnessGoal.html', context)
 
+
+
+
 @login_required
 def set_my_gym_goal(request):
     context = {'user': request.user}
 
-    exercises = [
-        ('cardio', 'Cardio'),
-        ('weight_lifting', 'Weight Lifting'),
-        ('yoga', 'Yoga'),
-        ('pilates', 'Pilates'),
-        ('hiit', 'HIIT'),
-        ('cycling', 'Cycling'),
-        ('swimming', 'Swimming'),
-        ('running', 'Running'),
-        ('rowing', 'Rowing'),
-        ('boxing', 'Boxing'),
-        ('dancing', 'Dancing'),
-        ('strength_training', 'Strength Training'),
-        ('crossfit', 'CrossFit'),
-        ('stretching', 'Stretching'),
-        ('martial_arts', 'Martial Arts'),
-    ]
     context['exercises'] = exercises
 
     goals = {}
@@ -111,6 +98,79 @@ def set_my_gym_goal(request):
 
     context['goals'] = goals
     return render(request, 'progressTracking/setMyGymGoal.html', context)
+
+@login_required
+def track_exercise(request):
+    context = {
+        'user': request.user,
+        'exercise_choices': exercises,
+    }
+    
+    if request.method == 'POST':
+        exercise_type = request.POST.get('exercise_type')
+        try:
+            duration = int(request.POST.get('duration', 0))
+        except ValueError:
+            duration = 0
+
+        # Create a new ExerciseSession record
+        ExerciseSession.objects.create(
+            user=request.user,
+            exercise_type=exercise_type,
+            exercise_time=duration
+        )
+        context['message'] = "Your exercise session has been recorded."
+    
+    return render(request, 'progressTracking/trackExercise.html', context)
+
+
+@login_required
+def today_exercise_records(request):
+    today = datetime.date.today()
+    records = ExerciseSession.objects.filter(user=request.user, recorded_at__date=today)
+    context = {
+        'records': records,
+        'today': today,
+    }
+    return render(request, 'progressTracking/todayExerciseRecords.html', context)
+
+@login_required
+def edit_exercise_record(request, record_id):
+    record = get_object_or_404(ExerciseSession, id=record_id, user=request.user)
+    today = datetime.date.today()
+    # Restrict editing to only today’s records.
+    if record.recorded_at.date() != today:
+        return redirect('today_exercise_records')
+    
+    if request.method == 'POST':
+        # Get new values from the submitted form.
+        exercise_type = request.POST.get('exercise_type')
+        try:
+            exercise_time = int(request.POST.get('exercise_time', 0))
+        except ValueError:
+            exercise_time = record.exercise_time
+        record.exercise_type = exercise_type
+        record.exercise_time = exercise_time
+        record.save()
+        return redirect('today_exercise_records')
+    else:
+        context = {
+            'record': record,
+            'exercise_choices': exercises,
+        }
+        return render(request, 'progressTracking/editExerciseRecord.html', context)
+
+@login_required
+def remove_exercise_record(request, record_id):
+    record = get_object_or_404(ExerciseSession, id=record_id, user=request.user)
+    
+    if request.method == 'POST':
+        record.delete()
+        return redirect('today_exercise_records')
+    
+    return redirect('today_exercise_records')
+
+
 
 
 def checkHistoryData(request, id):
