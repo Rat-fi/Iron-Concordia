@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Gym Activity Summary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 30px;
+        }
+        .summary-table {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center mb-4">Daily Gym Activity Summary ({{ today }})</h1>
+    <div class="summary-table">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Today's Progress (hours)</th>
+                    <th>Weekly Goal (hours)</th>
+                    <th>Difference (Goal - Today)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if summary_list %}
+                    {% for item in summary_list %}
+                        <tr>
+                            <td>{{ item.exercise_label }}</td>
+                            <td>{{ item.daily_progress|floatformat:2 }}</td>
+                            <td>{{ item.weekly_goal|floatformat:2 }}</td>
+                            <td>{{ item.difference|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No gym goals set or no activity recorded today.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

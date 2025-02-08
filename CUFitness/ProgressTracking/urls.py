@@ -9,6 +9,12 @@ urlpatterns = [
     path('todayRecords/', views.today_exercise_records, name='today_exercise_records'),
     path('editRecord/<int:record_id>', views.edit_exercise_record, name='edit_exercise_record'),
     path('removeRecord/<int:record_id>', views.remove_exercise_record, name='remove_exercise_record'),
+    path('dailySummary/', views.daily_summary, name='daily_summary'),
+
+
+
+
+
 
     path('checkHistory/<int:id>/', views.checkHistoryData),
     # path("", views.index, name = "index"),
