@@ -3,6 +3,7 @@ from .models.MealPlan_Searchbar import MealplanSearchbar
 from .models.Budget import BudgetMeal
 from .models.DietaryRestrictions import DietaryRestrictions,DietaryRestrictions_MealPlan
 from .models.QuickMeal import QuickMeal
+from .models.CampusOptions import CampusOptions_Restaurant, CampusOptions_MenuItem
 
 @admin.register(DietaryRestrictions_MealPlan)
 class DietaryRestrictionsMealPlanAdmin(admin.ModelAdmin):
@@ -25,3 +26,9 @@ class QuickMealAdmin(admin.ModelAdmin):
 
 admin.site.register(MealplanSearchbar)
 admin.site.register(BudgetMeal)
+
+class RestaurantAdmin(admin.ModelAdmin):
+    list_display = ('name', 'address', 'rating', 'latitude', 'longitude')
+
+admin.site.register(CampusOptions_Restaurant, RestaurantAdmin)
+admin.site.register(CampusOptions_MenuItem)
