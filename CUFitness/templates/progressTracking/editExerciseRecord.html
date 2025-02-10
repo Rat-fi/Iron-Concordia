@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Exercise Record</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body { background-color: #f8f9fa; padding-top: 30px; }
+    .edit-form { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="text-center mb-4">Edit Exercise Record</h1>
+  <div class="edit-form">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="exercise_type">Exercise Type:</label>
+        <select id="exercise_type" name="exercise_type" class="form-control">
+          {% for value, label in exercise_choices %}
+            <option value="{{ value }}" {% if record.exercise_type == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exercise_time">Duration (in seconds):</label>
+        <input type="number" name="exercise_time" id="exercise_time" class="form-control"
+               value="{{ record.exercise_time }}" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{% url 'today_exercise_records' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+</body>
+</html>

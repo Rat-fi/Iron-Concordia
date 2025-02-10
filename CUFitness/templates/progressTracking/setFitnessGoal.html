@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Set Your Daily Fitness Goals</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 30px;
+        }
+        .goal-form {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .goal-summary {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="goal-form">
+                    <h1 class="text-center">Daily Fitness Goals</h1>
+                    <p class="text-center">Hello, {{ user.username }}! Please update your goals below.</p>
+                    
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="standing_time">Standing Time (hours):</label>
+                            <input type="number" class="form-control" id="standing_time" name="standing_time" step="0.1" placeholder="e.g. 12" required value="{{ standing_time }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="exercise_minutes">Exercise (minutes):</label>
+                            <input type="number" class="form-control" id="exercise_minutes" name="exercise_minutes" placeholder="e.g. 30" required value="{{ exercise_minutes }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="walking_distance">Walking Distance (km):</label>
+                            <input type="number" class="form-control" id="walking_distance" name="walking_distance" step="0.1" placeholder="e.g. 3.5" required value="{{ walking_distance }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Save Goals</button>
+                    </form>
+                    
+                    {% if standing_time or exercise_minutes or walking_distance %}
+                        <div class="goal-summary">
+                            <h2 class="mt-4">Your Current Daily Goals:</h2>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <strong>Standing Time:</strong> {{ standing_time|default:"0" }} hours
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Exercise:</strong> {{ exercise_minutes|default:"0" }} minutes
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Walking Distance:</strong> {{ walking_distance|default:"0" }} (km)
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

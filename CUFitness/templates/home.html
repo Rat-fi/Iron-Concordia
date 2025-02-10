@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Home - CUFitness{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Welcome to CUFitness</h1>
+    <p>Your personal fitness companion.</p>
+
+    {% if user.is_authenticated %}
+        <p>Welcome back, {{ user.username }}!</p>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}
