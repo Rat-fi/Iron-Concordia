@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class DietaryRestrictions_MealPlan(models.Model):
     name = models.CharField(max_length=255)
@@ -24,7 +24,7 @@ class DietaryRestrictions_MealPlan(models.Model):
         return self.name
 
 class DietaryRestrictions(models.Model):
-    user = models.OneToOneField(User, on_delete = models.CASCADE, related_name = 'dietary_restrictions')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = 'dietary_restrictions')
     meal_plans = models.ManyToManyField(DietaryRestrictions_MealPlan, blank=True)
     
     is_vegetarian = models.BooleanField(default=False)
