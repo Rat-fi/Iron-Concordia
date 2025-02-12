@@ -4,6 +4,7 @@ from .models.Budget import BudgetMeal
 from .models.DietaryRestrictions import DietaryRestrictions,DietaryRestrictions_MealPlan
 from .models.QuickMeal import QuickMeal
 from .models.CampusOptions import CampusOptions_Restaurant, CampusOptions_MenuItem
+from .models.NewCookUser import MealInstructions
 
 @admin.register(DietaryRestrictions_MealPlan)
 class DietaryRestrictionsMealPlanAdmin(admin.ModelAdmin):
@@ -32,3 +33,8 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 admin.site.register(CampusOptions_Restaurant, RestaurantAdmin)
 admin.site.register(CampusOptions_MenuItem)
+
+@admin.register(MealInstructions)
+class MealInstructionsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'difficulty', 'price', 'prepare_time', 'calories', 'protein')
+    search_fields = ('name', 'dietary_restrictions')

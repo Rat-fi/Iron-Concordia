@@ -5,6 +5,7 @@ from .views.DietaryRestrictions import meal_plan
 from .views.Budget import budget_meallist
 from .views.QuickMeal import quick_meal_list
 from .views.CampusOptions import campus_options
+from .views.NewCookUser import meal_instructions_list
 
 urlpatterns = [
     path('set_dietary_restrictions/', set_dietary_restrictions, name='set_dietary_restrictions'),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('budget/', budget_meallist, name= 'budget_meallist'),
     path('quickmeals/', quick_meal_list, name='quick_meal_list'),
     path('campus_options/', campus_options, name='campus_options'),
+    path('meal_instructions/', meal_instructions_list, name = 'newcookuser_list'),
 ]
