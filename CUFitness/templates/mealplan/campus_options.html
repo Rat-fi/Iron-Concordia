@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Dining Options</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    form label {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Campus Dining Options</h1>
+  
+  <form method="GET">
+    <label>
+      Search Radius (km):
+      <input type="number" name="radius" step="0.1" value="{{ radius_km }}">
+    </label>
+    <label>
+      Category:
+      <select name="category">
+        <option value="">All</option>
+        <option value="staple" {% if request.GET.category == "staple" %}selected{% endif %}>Staple</option>
+        <option value="side" {% if request.GET.category == "side" %}selected{% endif %}>Side</option>
+        <option value="drink" {% if request.GET.category == "drink" %}selected{% endif %}>Drink</option>
+        <option value="dessert" {% if request.GET.category == "dessert" %}selected{% endif %}>Dessert</option>
+      </select>
+    </label>
+    <label>
+      Dietary Restrictions:
+      <select name="dietary">
+        <option value="">All</option>
+        <option value="vegetarian" {% if request.GET.dietary == "vegetarian" %}selected{% endif %}>Vegetarian</option>
+        <option value="vegan" {% if request.GET.dietary == "vegan" %}selected{% endif %}>Vegan</option>
+        <option value="gluten_free" {% if request.GET.dietary == "gluten_free" %}selected{% endif %}>Gluten Free</option>
+        <option value="lactose_free" {% if request.GET.dietary == "lactose_free" %}selected{% endif %}>Lactose Free</option>
+        <option value="nut_free" {% if request.GET.dietary == "nut_free" %}selected{% endif %}>Nut Free</option>
+        <option value="shellfish_free" {% if request.GET.dietary == "shellfish_free" %}selected{% endif %}>Shellfish Free</option>
+        <option value="soy_free" {% if request.GET.dietary == "soy_free" %}selected{% endif %}>Soy Free</option>
+        <option value="egg_free" {% if request.GET.dietary == "egg_free" %}selected{% endif %}>Egg Free</option>
+        <option value="pork_free" {% if request.GET.dietary == "pork_free" %}selected{% endif %}>Pork Free</option>
+        <option value="beef_free" {% if request.GET.dietary == "beef_free" %}selected{% endif %}>Beef Free</option>
+        <option value="fish_free" {% if request.GET.dietary == "fish_free" %}selected{% endif %}>Fish Free</option>
+        <option value="poultry_free" {% if request.GET.dietary == "poultry_free" %}selected{% endif %}>Poultry Free</option>
+        <option value="none" {% if request.GET.dietary == "none" %}selected{% endif %}>No Restrictions</option>
+      </select>
+    </label>
+    <label>
+      Max Price ($):
+      <input type="number" name="max_price" step="0.01" value="{{ request.GET.max_price }}">
+    </label>
+    <label>
+      Minimum Rating:
+      <input type="number" name="min_rating" step="0.1" value="{{ request.GET.min_rating }}">
+    </label>
+    <button type="submit">Filter</button>
+  </form>
+  
+  <h2>Map of Nearby Restaurants</h2>
+  <div id="map"></div>
+  
+  <h2>Restaurants</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Distance (km)</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody id="restaurants-table">
+
+    </tbody>
+  </table>
+  
+  <h2>Menu Items</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Restaurant</th>
+        <th>Category</th>
+        <th>Dietary Restrictions</th>
+        <th>Price ($)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in menu_items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.restaurant.name }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.dietary_restrictions }}</td>
+        <td>{{ item.price }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No menu items match the selected criteria.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <script>
+    var schoolLat = 45.4933;
+    var schoolLon = -73.5781;
+    
+    var map = L.map('map').setView([schoolLat, schoolLon], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+
+    var schoolMarker = L.marker([schoolLat, schoolLon]).addTo(map)
+      .bindPopup("<b>School Location</b><br>CUFitness Campus").openPopup();
+
+    var restaurants = JSON.parse('{{ restaurants_json|escapejs }}');
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      function toRad(x) { return x * Math.PI / 180; }
+      var R = 6371; 
+      var dLat = toRad(lat2 - lat1);
+      var dLon = toRad(lon2 - lon1);
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c;
+      return d.toFixed(2);
+    }
+
+    var restaurantsTable = document.getElementById('restaurants-table');
+
+    restaurants.forEach(function(restaurant) {
+      var distance = haversineDistance(schoolLat, schoolLon, restaurant.latitude, restaurant.longitude);
+
+      var marker = L.marker([restaurant.latitude, restaurant.longitude]).addTo(map);
+      marker.bindPopup("<b>" + restaurant.name + "</b><br>" +
+                       "Address: " + restaurant.address + "<br>" +
+                       "Distance: " + distance + " km<br>" +
+                       "Rating: " + restaurant.rating);
+
+      var row = document.createElement('tr');
+      row.innerHTML = "<td>" + restaurant.name + "</td>" +
+                      "<td>" + restaurant.address + "</td>" +
+                      "<td>" + distance + "</td>" +
+                      "<td>" + restaurant.rating + "</td>";
+      restaurantsTable.appendChild(row);
+    });
+  </script>
+</body>
+</html>
+

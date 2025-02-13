@@ -1,0 +1,32 @@
+<h2>Your Meal Plan</h2>
+
+<p><strong>Your Dietary Restrictions:</strong></p>
+<ul>
+    {% if restrictions.is_vegetarian %}<li>Vegetarian</li>{% endif %}
+    {% if restrictions.is_vegan %}<li>Vegan</li>{% endif %}
+    {% if restrictions.is_gluten_Free %}<li>Gluten-Free</li>{% endif %}
+    {% if restrictions.is_lactose_Free %}<li>Lactose-Free</li>{% endif %}
+    {% if restrictions.is_nut_Free %}<li>Nut-Free</li>{% endif %}
+    {% if restrictions.is_shellfish_Free %}<li>Shellfish-Free</li>{% endif %}
+    {% if restrictions.is_soy_free %}<li>Soy-Free</li>{% endif %}
+    {% if restrictions.is_egg_free %}<li>Egg-Free</li>{% endif %}
+    {% if restrictions.is_pork_free %}<li>Pork-Free</li>{% endif %}
+    {% if restrictions.is_beef_free %}<li>Beef-Free</li>{% endif %}
+    {% if restrictions.is_fish_free %}<li>Fish-Free</li>{% endif %}
+    {% if restrictions.is_poultry_free %}<li>Poultry-Free</li>{% endif %}
+</ul>
+
+<h3>Your Selected Meals</h3>
+{% if restrictions.meal_plans.all %}
+    <ul>
+    {% for meal in restrictions.meal_plans.all %}
+        <li>
+            <strong>{{ meal.name }}</strong><br>
+            Calories: {{ meal.calories }} kcal | Protein: {{ meal.protein }} g<br>
+            <em>{{ meal.description }}</em>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No meals selected.</p>
+{% endif %}

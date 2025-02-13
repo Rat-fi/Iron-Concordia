@@ -1,0 +1,29 @@
+<form method="GET" action="/MealPlan/search/">
+    <input type="text" name="q" value = "{{ query }}" placeholder="Starting Search..." >
+    <select name = 'category'>
+        <option value = "">All Categories</option>
+        <option value = "Meat" {% if category == "Meat" %}selected{% endif %}>Meat</option>
+        <option value = "Vegetable" {% if category == "Vegetable" %}selected{% endif %}>Vegetable</option>
+        <option value = "Dietary Restrictions" {% if category == "Dietary Restrictions" %}selected{% endif %}>Dietary Restrictions</option>
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+    <ul>
+        {% for MealPlan in page_obj %}
+            <li>
+                <li>{{ MealPlan.name}} - {{MealPlan.category}}</li>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&category={{ category }}&page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&category={{ category }}&page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+
+    </div>
