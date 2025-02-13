@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('progressTracking/', views.index),
+    
     path('setDailyFitnessGoals/', views.set_daily_fitness_goal, name='set_goals'),
     path('setMyGymGoals/', views.set_my_gym_goal, name='set_my_gym_goals'),
     path('trackExercise/', views.track_exercise, name='track_exercise'),
@@ -12,11 +12,12 @@ urlpatterns = [
     path('dailySummary/', views.daily_summary, name='daily_summary'),
     path('weeklySummary/', views.weekly_summary, name='weekly_summary'),
     path('monthlySummary/', views.monthly_summary, name='monthly_summary'),
+    path('historyActivity/', views.history_activity, name='history_activity'),
 
 
 
 
-
+    path('progressTracking/', views.index),
     path('checkHistory/<int:id>/', views.checkHistoryData),
     # path("", views.index, name = "index"),
     path("<int:question_id>/", views.detail, name='detail'),

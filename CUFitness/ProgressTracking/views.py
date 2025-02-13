@@ -399,7 +399,58 @@ def monthly_summary(request):
     }
     return render(request, 'progressTracking/monthlySummary.html', context)
 
-
+@login_required
+def history_activity(request):
+    # Get start_date and end_date from GET parameters
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+    
+    records = ExerciseSession.objects.filter(user=request.user)
+    error = None
+    today = datetime.date.today()
+    start_date = None
+    end_date = None
+    
+    if start_date_str:
+        try:
+            start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            error = "Invalid start date format. Use YYYY-MM-DD."
+    if end_date_str:
+        try:
+            end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            error = "Invalid end date format. Use YYYY-MM-DD."
+    
+    if start_date and end_date:
+        if start_date > end_date:
+            error = "Start date cannot be later than end date."
+            records = records.none()
+        else:
+            records = records.filter(recorded_at__date__gte=start_date, recorded_at__date__lte=end_date)
+    else:
+        if start_date:
+            records = records.filter(recorded_at__date__gte=start_date)
+        if end_date:
+            if end_date > today:
+                end_date = today
+                end_date_str = today.strftime('%Y-%m-%d')
+            records = records.filter(recorded_at__date__lte=end_date)
+    
+    # Convert each record's exercise_time (seconds) into minutes.
+    records_list = []
+    for r in records.order_by('-recorded_at'):
+        r.exercise_minutes = r.exercise_time / 60.0  # minutes as float
+        records_list.append(r)
+    
+    context = {
+        'records': records_list,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'error': error,
+        'today': today.strftime('%Y-%m-%d'),
+    }
+    return render(request, 'progressTracking/historyActivity.html', context)
 
 
 
