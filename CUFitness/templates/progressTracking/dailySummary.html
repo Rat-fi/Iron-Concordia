@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
+
+
 <head>
     <meta charset="UTF-8">
     <title>Daily Gym Activity Summary</title>
@@ -17,6 +20,7 @@
         }
     </style>
 </head>
+{% block content %}
 <body>
 <div class="container">
     <h1 class="text-center mb-4">Daily Gym Activity Summary ({{ today }})</h1>
@@ -50,4 +54,5 @@
     </div>
 </div>
 </body>
-</html>
+
+{% endblock %}
