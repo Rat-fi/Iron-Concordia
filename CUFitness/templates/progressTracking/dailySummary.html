@@ -31,20 +31,20 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in summary_list %}
-                    {% if item.daily_goal > 0 %}
+                {% if summary_list %}
+                    {% for item in summary_list %}
                         <tr>
                             <td>{{ item.exercise_label }}</td>
                             <td>{{ item.daily_progress|floatformat:2 }}</td>
                             <td>{{ item.daily_goal|floatformat:2 }}</td>
                             <td>{{ item.difference|floatformat:2 }}</td>
                         </tr>
-                    {% endif %}
-                {% empty %}
+                    {% endfor %}
+                {% else %}
                     <tr>
                         <td colspan="4" class="text-center">No gym goals set or no activity recorded today.</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>

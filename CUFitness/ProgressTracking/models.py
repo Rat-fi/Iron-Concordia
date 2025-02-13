@@ -39,6 +39,7 @@ class GymGoal(models.Model):
     crossfit = models.FloatField(default=0)
     stretching = models.FloatField(default=0)
     elliptical_trainer = models.FloatField(default=0)
+    goal_date = models.DateField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
