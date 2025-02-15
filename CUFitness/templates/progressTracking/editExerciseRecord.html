@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
 <html>
 <head>
   <meta charset="UTF-8">
@@ -9,6 +11,8 @@
     .edit-form { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   </style>
 </head>
+
+{% block content %}
 <body>
 <div class="container">
   <h1 class="text-center mb-4">Edit Exercise Record</h1>
@@ -35,3 +39,4 @@
 </div>
 </body>
 </html>
+{% endblock %}

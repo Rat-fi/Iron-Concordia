@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Monthly Gym Activity Summary</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-      body { background-color: #f8f9fa; padding-top: 30px; }
-      .summary-table {
-          background: #fff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Monthly Gym Activity Summary - CUFitness{% endblock %}
+
+{% block content %}
 <div class="container">
     <h1 class="text-center mb-4">Monthly Gym Activity Summary</h1>
     <p class="text-center">Month: {{ first_day }} to {{ last_day }}</p>
@@ -24,28 +12,23 @@
                 <tr>
                     <th>Exercise</th>
                     <th>Monthly Progress (hours)</th>
-                    <th>Monthly Goal (hours)</th>
-                    <th>Difference (Goal - Progress)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in summary_list %}
-                    {% if item.monthly_goal > 0 %}
+                    {% if item.monthly_progress > 0 %}
                         <tr>
                             <td>{{ item.exercise_label }}</td>
                             <td>{{ item.monthly_progress|floatformat:2 }}</td>
-                            <td>{{ item.monthly_goal|floatformat:2 }}</td>
-                            <td>{{ item.difference|floatformat:2 }}</td>
                         </tr>
                     {% endif %}
                 {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">No exercise records for this month.</td>
+                        <td colspan="2" class="text-center">No exercise records for this month.</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-</body>
-</html>
+{% endblock %}

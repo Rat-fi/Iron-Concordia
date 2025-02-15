@@ -39,6 +39,7 @@ class GymGoal(models.Model):
     crossfit = models.FloatField(default=0)
     stretching = models.FloatField(default=0)
     elliptical_trainer = models.FloatField(default=0)
+    goal_date = models.DateField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -71,13 +72,6 @@ class ExerciseSession(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.exercise_type} for {self.exercise_time} sec on {self.recorded_at}"
+    
 
-
-class ExerciseRecord(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    exercise_type = models.CharField(max_length=50, choices=exercises)
-    duration = models.PositiveIntegerField(help_text="Duration in seconds")
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.get_exercise_type_display()} ({self.duration} sec) on {self.timestamp}"
+    
