@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete Account{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Delete Your Account</h2>
+    <p>Enter your password to confirm deletion.</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="password" name="password" class="form-control" placeholder="Enter Password" required>
+        <button type="submit" class="btn btn-danger mt-2">Delete My Account</button>
+    </form>
+</div>
+{% endblock %}

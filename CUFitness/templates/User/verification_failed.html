@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Verification Failed{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Email Verification Failed</h2>
+    <p>Sorry, the verification link is invalid or has expired.</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Home</a>
+</div>
+{% endblock %}
