@@ -20,6 +20,231 @@
         "name": "Vegan Burger",
         "price": 12.50
       }
+    ],
+    "MealPlan_campusoptions_menuitem":[
+        {
+            "name": "Chicken Burger",
+            "category": "Staple",
+            "dietary_restrictions": "No Restrictions",
+            "price": 11.49,
+            "restaurant_id": 1
+        },
+        {
+            "name": "Large macaroni salad",
+            "category": "sides",
+            "dietary_restrictions": "Gluten free",
+            "price": 4.99,
+            "restaurant_id": 1
+        },
+        {
+            "name": "Beef Bibimbap",
+            "category": "Staple",
+            "dietary_restrictions": "No Restrictions",
+            "price": 22.49,
+            "restaurant_id": 2
+        },
+        {
+            "name": "Seafood Pancake",
+            "category": "Staple",
+            "dietary_restrictions": "No Restrictions",
+            "price": 21.24,
+            "restaurant_id": 2
+        },
+        {
+            "name": "Rouge Mini",
+            "category": "Staple",
+            "dietary_restrictions": "No Restrictions",
+            "price": 10.99,
+            "restaurant_id": 3
+        }
+    ],
+    "MealPlan_campusoptions_restaurant": [
+        {
+            "name": "Olivia's Authentic Chicken",
+            "address": "1396 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 2E4",
+            "rating": 4.2,
+            "latitude": 45.5082548,
+            "longitude": -73.5707994
+        },
+        {
+            "name": "COQCOR",
+            "address": "1237 Rue Guy, Montréal, QC H3H 2K5",
+            "rating": 4.7,
+            "latitude": 45.4948645,
+            "longitude": -73.579482
+        },
+        {
+            "name": "Poulet Rouge Ste-Catherine",
+            "address": "1623 Rue Sainte-Catherine, Montréal, QC H3H 1L8",
+            "rating": 4.4,
+            "latitude": 45.4947611,
+            "longitude": -73.5809637
+        }
+    ],
+    "MealPlan_dietaryrestrictions_mealplan": [
+        {
+            "name": "Grilled Chicken",
+            "description": "Main ingredient: Chicken breast. Ingredients: Olive oil, garlic, black pepper, salt, lemon juice, rosemary. Nutritional highlights: Calories: 165 kcal per 100g serving, Protein: 31g, Fat: 3.6g.",
+            "calories": 165,
+            "protein": 31.0,
+            "is_vegetarian": false,
+            "is_vegan": false,
+            "contains_gluten": false,
+            "contains_lactose": false,
+            "contains_nuts": false,
+            "contains_shellfish": false,
+            "contains_soy": false,
+            "contains_eggs": false,
+            "contains_pork": false,
+            "contains_beef": false,
+            "contains_fish": false,
+            "contains_poultry": true
+        },
+        {
+            "name": "Caesar Salad",
+            "description": "Main ingredients: Romaine lettuce, grilled chicken (optional), Parmesan cheese, croutons. Dressing: Caesar dressing (egg yolks, olive oil, lemon juice, Worcestershire sauce, garlic, Parmesan cheese, black pepper). Nutritional highlights: Calories: ~250 kcal, Protein: ~16g, Fat: 15-20g.",
+            "calories": 250,
+            "protein": 16.0,
+            "is_vegetarian": false,
+            "is_vegan": false,
+            "contains_gluten": true,
+            "contains_lactose": true,
+            "contains_nuts": false,
+            "contains_shellfish": false,
+            "contains_soy": false,
+            "contains_eggs": true,
+            "contains_pork": false,
+            "contains_beef": false,
+            "contains_fish": false,
+            "contains_poultry": true
+        },
+        {
+            "name": "Tofu Stir Fry",
+            "description": "Main ingredients: Firm tofu, carrots, broccoli, bell peppers. Sauce: Soy sauce, oyster sauce (or vegan sauce), garlic, ginger, sesame oil. Nutritional highlights: Calories: ~200 kcal, Protein: ~13.5g, Fat: 12g, Carbs: 10-15g.",
+            "calories": 200,
+            "protein": 13.5,
+            "is_vegetarian": true,
+            "is_vegan": true,
+            "contains_gluten": false,
+            "contains_lactose": false,
+            "contains_nuts": false,
+            "contains_shellfish": false,
+            "contains_soy": true,
+            "contains_eggs": false,
+            "contains_pork": false,
+            "contains_beef": false,
+            "contains_fish": false,
+            "contains_poultry": false
+        },
+        {
+            "name": "Steak",
+            "description": "Main ingredient: Beef tenderloin or ribeye steak. Seasoning: Salt, black pepper, olive oil, butter, garlic, rosemary. Nutritional highlights: Calories: 242 kcal, Protein: 22g, Fat: 17g.",
+            "calories": 242,
+            "protein": 22.0,
+            "is_vegetarian": false,
+            "is_vegan": false,
+            "contains_gluten": false,
+            "contains_lactose": false,
+            "contains_nuts": false,
+            "contains_shellfish": false,
+            "contains_soy": false,
+            "contains_eggs": false,
+            "contains_pork": false,
+            "contains_beef": true,
+            "contains_fish": false,
+            "contains_poultry": false
+        },
+        {
+            "name": "Vegan Burger",
+            "description": "Main ingredients: Tofu or black beans patty, whole wheat bun. Toppings: Lettuce, tomato, avocado, vegan cheese, vegan mayo. Nutritional highlights: Calories: ~400 kcal, Protein: ~20g, Fat: 15g, Carbs: 30g.",
+            "calories": 400,
+            "protein": 20.0,
+            "is_vegetarian": true,
+            "is_vegan": true,
+            "contains_gluten": true,
+            "contains_lactose": false,
+            "contains_nuts": false,
+            "contains_shellfish": false,
+            "contains_soy": false,
+            "contains_eggs": false,
+            "contains_pork": false,
+            "contains_beef": false,
+            "contains_fish": false,
+            "contains_poultry": false
+        }
+    ],
+    "MealPlan_mealinstructions": [
+        {
+            "name": "Grilled Chicken",
+            "difficulty": "Easy",
+            "dietary_restrictions": "",
+            "price": 18.88,
+            "prepare_time": 45,
+            "calories": 165,
+            "protein": 31,
+            "steps": "Marinate: In a bowl, mix olive oil, minced garlic, lemon juice, salt, black pepper, and chopped rosemary. Coat the chicken breasts evenly. Allow the chicken to marinate for at least 30 minutes.\nPreheat Grill: Heat your grill or grill pan to medium-high heat.\nGrill: Place the marinated chicken on the grill. Cook for 5–7 minutes per side or until the internal temperature reaches a safe level (about 165°F or 74°C).\nRest & Serve: Remove the chicken from the grill and let it rest for a few minutes before slicing. Serve warm."
+        },
+        {
+            "name": "Caesar Salad",
+            "difficulty": "Easy",
+            "dietary_restrictions": "",
+            "price": 11.00,
+            "prepare_time": 20,
+            "calories": 250,
+            "protein": 16,
+            "steps": "Prepare the Dressing: Whisk together egg yolks, olive oil, lemon juice, Worcestershire sauce, minced garlic, grated Parmesan, and black pepper until smooth and emulsified.\nPrepare Lettuce: Wash and chop the romaine lettuce into bite-sized pieces.\nToss Salad: In a large bowl, toss the lettuce with the prepared dressing.\nAdd Toppings: Sprinkle in croutons, add extra Parmesan cheese, and top with sliced grilled chicken if desired.\nServe: Enjoy immediately for the best texture."
+        },
+        {
+            "name": "Steak",
+            "difficulty": "Medium",
+            "dietary_restrictions": "",
+            "price": 26.99,
+            "prepare_time": 45,
+            "calories": 242,
+            "protein": 22,
+            "steps": "Room Temperature: Remove the steak from the refrigerator and let it sit for about 30 minutes to come to room temperature.\nSeason: Pat the steak dry with paper towels. Season both sides generously with salt and black pepper.\nPreheat Skillet: Heat a heavy skillet or grill pan over high heat. Add olive oil and a small knob of butter.\nSear: Place the steak in the pan along with crushed garlic and a sprig of rosemary. Sear for 3–5 minutes on each side, depending on your preferred doneness.\nBaste: Spoon the butter-garlic mixture over the steak during cooking to enhance flavor.\nRest & Serve: Remove the steak from the pan and let it rest for 5–10 minutes before slicing. Serve with your favorite side dish."
+        }
+    ],
+    "MealPlan_mealplansearchbar": [
+        {
+            "name": "Grilled Chicken",
+            "description": "Main ingredient: Chicken breast. Ingredients: Olive oil, garlic, black pepper, salt, lemon juice, rosemary. Nutritional highlights: Calories: 165 kcal (per 3.5 oz / 100g serving), Protein: 31g (per 3.5 oz / 100g serving), Fat: 3.6g (mainly healthy fats from olive oil).",
+            "category": "Meat"
+        },
+        {
+            "name": "Caesar Salad",
+            "description": "Main ingredients: Romaine lettuce, grilled chicken (optional), Parmesan cheese, croutons. Dressing: Caesar dressing (egg yolks, olive oil, lemon juice, Worcestershire sauce, garlic, Parmesan cheese, black pepper). Nutritional highlights: Calories: 200–300 kcal (for a medium serving with chicken), Protein: 12g–20g (if chicken is added), Fat: 15g–20g (due to the Caesar dressing).",
+            "category": "Vegetable"
+        },
+        {
+            "name": "Tofu Stir Fry",
+            "description": "Main ingredients: Firm tofu, carrots, broccoli, bell peppers. Sauce: Soy sauce, oyster sauce (or vegan sauce), garlic, ginger, sesame oil. Nutritional highlights: Calories: 180–220 kcal (per serving, depending on tofu portion), Protein: 12g–15g (from tofu), Fat: 12g (from sesame oil and tofu), Carbs: 10g–15g (from vegetables).",
+            "category": "Vegetable"
+        },
+        {
+            "name": "Steak",
+            "description": "Main ingredient: Beef tenderloin or ribeye steak. Seasoning: Salt, black pepper, olive oil, butter, garlic, rosemary. Nutritional highlights: Calories: 242 kcal (per 3.5 oz / 100g serving of beef tenderloin), Protein: 22g (per 3.5 oz / 100g serving), Fat: 17g (depending on the cut of meat), Iron: High (great for muscle growth and blood health).",
+            "category": "Meat"
+        },
+        {
+            "name": "Vegan Burger",
+            "description": "Main ingredients: Tofu or black beans (for the patty), whole wheat bun. Toppings: Lettuce, tomato, avocado, vegan cheese, vegan mayo (or tofu-based mayo). Nutritional highlights: Calories: 350–450 kcal (depending on the size of the patty and toppings), Protein: 15g–25g (from tofu or black beans), Fat: 15g (mainly from avocado and vegan mayo), Carbs: 30g (mainly from the bun and beans).",
+            "category": "Dietary Restrictions"
+        }
+    ],
+    "MealPlan_quickmeal": [
+        {
+            "name": "Caesar Salad",
+            "preparation_time": 20,
+            "cooking_materials": "Main ingredient: Romaine lettuce, Parmesan cheese, Croutons. Ingredients: Egg yolks, Olive oil, Lemon juice, Worcestershire sauce, Garlic (minced), Parmesan cheese (grated), Black pepper. Steps: Prepare the Dressing: Whisk together egg yolks, olive oil, lemon juice, Worcestershire sauce, minced garlic, grated Parmesan, and black pepper until the dressing is smooth and emulsified. Prepare Lettuce: Wash and chop the romaine lettuce into bite-sized pieces. Toss Salad: In a large bowl, toss the lettuce with the prepared dressing. Add Toppings: Sprinkle in croutons, add extra Parmesan cheese, and top with sliced grilled chicken if desired. Serve: Enjoy immediately for the best texture.",
+            "created_at": "2025-02-19T00:00:00"
+        },
+        {
+            "name": "Egg Sandwich",
+            "preparation_time": 20,
+            "cooking_materials": "Main ingredient: 1-2 eggs, 2 slices of bread (white, whole wheat, or multigrain), Butter or olive oil (for cooking), Salt and black pepper (to taste), Optional toppings: lettuce, tomato slices, cheese, and mayonnaise. Steps: Toast the Bread: Toast the bread slices until they are golden and slightly crisp. You can use a toaster or toast them in a pan with a little butter for extra flavor. Cook the Egg: Heat a small amount of butter or olive oil in a non-stick pan over medium heat. Crack the egg into the pan and cook it as a fried egg (sunny side up or over-easy) or scramble it, according to your preference. Season with salt and black pepper while cooking. Assemble the Sandwich: Place the cooked egg on one slice of toasted bread. Add any optional toppings you like. Cover with the other slice of toast and gently press together. Serve and Enjoy: Your egg sandwich is ready to be served. Enjoy it as a quick breakfast or a satisfying snack!",
+            "created_at": "2025-02-20T00:00:00"
+        }
     ]
-  }
+}
   
