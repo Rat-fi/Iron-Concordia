@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 class MealInstructions(models.Model):
     name = models.CharField(max_length=255)
@@ -16,7 +17,7 @@ class MealInstructions(models.Model):
         help_text="Comma-separated dietary restrictions. (e.g., vegan, gluten-free)"
         )
     
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)])
 
     prepare_time = models.PositiveIntegerField(help_text="Preparation time in minutes.")
 
