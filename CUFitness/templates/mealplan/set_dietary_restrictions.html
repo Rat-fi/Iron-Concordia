@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
+
+{% block content %}
+
 <h2>Set Your Dietary Restrictions</h2>
 <p>Select your dietary restrictions below. Your meal plan will be filtered accordingly.</p>
 
@@ -18,5 +24,7 @@
         {% endfor %}
     </ul>
 
-    <button type="submit">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
+
+{% endblock %}

@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
+
+{% block content %}
 <head>
     <title>Meal Preparation Instructions</title>
 </head>
@@ -25,7 +28,7 @@
         <label for="protein_min">Min Protein (g):</label>
         <input type="number" name="protein_min" id="protein_min">
         
-        <button type="submit">Filter</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
     
     {% for instruction in instructions %}
@@ -43,4 +46,5 @@
         <p>No meal instructions found. Please adjust your filters.</p>
     {% endfor %}
 </body>
-</html>
+
+{% endblock %}

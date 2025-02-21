@@ -7,6 +7,19 @@
     <h2>Welcome, {{ user.username }}!</h2>
     <p>This is your dashboard where you can manage your fitness plans and track progress.</p>
 
+    <!-- Meal Planning Section -->
+    <h3>Meal Plan</h3>
+    <div class="btn-group mt-3" role="group">
+        <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-primary">Set Dietary Restrictions</a>
+        <a href="{% url 'meal_plan' %}" class="btn btn-primary">Meal Plan</a>
+        <a href="{% url 'MealPlan_Searchbar' %}" class="btn btn-primary">MealPlan Searchbar</a>
+        <a href="{% url 'budget_meallist' %}" class="btn btn-primary">Budget Meal List</a>
+        <a href="{% url 'quick_meal_list' %}" class="btn btn-primary">Quick Meal list</a>
+        <a href="{% url 'campus_options' %}" class="btn btn-primary">Campus Dining Options</a>
+        <a href="{% url 'newcookuser_list' %}" class="btn btn-primary">Meal Instructions</a>
+    </div>
+
+
     <!-- Fitness Tracking Section -->
     <h3>Fitness Management</h3>
     <div class="btn-group mt-3" role="group">

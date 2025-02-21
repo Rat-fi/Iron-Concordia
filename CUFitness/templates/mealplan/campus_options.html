@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+
+{% block title %}Campus Dining Options{% endblock %}
+
+{% block content %}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +32,8 @@
     }
   </style>
 </head>
+
+
 <body>
   <h1>Campus Dining Options</h1>
   
@@ -74,7 +79,7 @@
       Minimum Rating:
       <input type="number" name="min_rating" step="0.1" value="{{ request.GET.min_rating }}">
     </label>
-    <button type="submit">Filter</button>
+    <button type="submit" class="btn btn-primary">Filter</button>
   </form>
   
   <h2>Map of Nearby Restaurants</h2>
@@ -170,5 +175,6 @@
     });
   </script>
 </body>
-</html>
+
+{% endblock %}
 
