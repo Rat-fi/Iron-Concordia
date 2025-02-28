@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'MealPlan', 
     'ProgressTracking.apps.ProgresstrackingConfig',
-    'User'
+    'User',
+    'FitnessPlan',
 ]
 
 MIDDLEWARE = [

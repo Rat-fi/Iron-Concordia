@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+
+{% block content %}
+
+<html>
+<head>
+    <title>All The Workouts</title>
+</head>
+<body>
+    <h1>All The Workouts</h1>
+    <ul>
+        {% for workout in workouts %}
+            <li>
+                <a href="{% url 'workout-detail' workout.id %}">{{ workout.workout_name }}</a>
+            </li>
+        {% empty %}
+            <li>There is no any Workout</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'workout-create' %}"><button type="button" class="btn btn-primary">Continue to create new Workout</button></a>
+</body>
+</html>
+{% endblock %}

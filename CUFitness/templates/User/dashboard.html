@@ -7,6 +7,12 @@
     <h2>Welcome, {{ user.username }}!</h2>
     <p>This is your dashboard where you can manage your fitness plans and track progress.</p>
 
+    <!-- Fitness Plan Section -->
+    <h3>Fitness Plan</h3>
+    <div class="btn-group mt-3" role="group">
+        <a href="{% url 'workout-create' %}" class="btn btn-primary">Create Workouts</a>
+    </div>
+
     <!-- Meal Planning Section -->
     <h3>Meal Plan</h3>
     <div class="btn-group mt-3" role="group">
