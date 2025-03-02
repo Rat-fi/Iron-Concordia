@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+
+{% block content %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Select Workout Category</title>
+</head>
+<body>
+    <h1>Please Select Your Interesting Category</h1>
+    <form method="get" action="{% url 'browse_exercise_list' %}">
+        {% for category in categories %}
+            <input type="checkbox" name="categories" value="{{ category.id }}"> {{ category.name }} <br>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">View Corresponding Exercises</button>
+    </form>
+</body>
+</html>
+{% endblock %}
