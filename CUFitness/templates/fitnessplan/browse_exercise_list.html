@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -11,6 +12,9 @@
 </head>
 <body>
     <h1>Workout Exercises</h1>
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'favorite_list' %}"><button type="button" class="btn btn-primary">My Favorites</button></a>
+    {% endif %}
     <ul>
         {% for exercise in exercises %}
             <li>
@@ -19,6 +23,13 @@
                 Calories: {{ exercise.calories }},
                 Intensity: {{ exercise.intensity_level }},
                 Category: {{ exercise.category.name }},
+                {% if request.user.is_authenticated %}
+                    {% if request.user in exercise.favorited_by.all %}
+                        <a href="{% url 'toggle_favorite' exercise.id %}" title = "Remove from Favorites">★</a>
+                    {% else %}
+                        <a href="{% url 'toggle_favorite' exercise.id %}" title = "Add to Favorites">☆</a>
+                    {% endif %}
+                {% endif %}
             </li>
         {% empty %}
             <li>No Corresponding Exercises</li>

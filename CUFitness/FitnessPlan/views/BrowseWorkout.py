@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from ..models.BrowseWorkout import BrowseWorkout, Category
 from django.db.models import Case, When, IntegerField
 
@@ -24,3 +25,21 @@ def browse_exercise_list(request):
 ).order_by('name', 'duration', 'intensity_order')
 
     return render(request, 'fitnessplan/browse_exercise_list.html', {'exercises': exercises})
+
+@login_required
+def toggle_favorite(request, exercise_id):
+    exercise = get_object_or_404(BrowseWorkout, id=exercise_id)
+    user = request.user
+
+    if user in exercise.favorited_by.all():
+        exercise.favorited_by.remove(user)
+    else:
+        exercise.favorited_by.add(user)
+
+    return redirect(request.META.get('HTTP_REFERER', 'browse_exercise_list'))
+
+
+@login_required
+def favorite_list(request):
+    favorites = request.user.favorite_exercises.all()
+    return render(request,'fitnessplan/favorite_list.html', {'favorites': favorites})
