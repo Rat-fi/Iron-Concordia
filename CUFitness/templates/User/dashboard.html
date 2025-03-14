@@ -8,15 +8,16 @@
     <p>This is your dashboard where you can manage your fitness plans and track progress.</p>
 
     <!-- Fitness Plan Section -->
-    <h3>Fitness Plan</h3>
+    <h3 class="mt-4">Fitness Plan</h3>
     <div class="btn-group mt-3" role="group">
         <a href="{% url 'workout-create' %}" class="btn btn-primary">Create Workouts</a>
+        <a href="{% url 'workout-list' %}" class="btn btn-primary">Review and Edit Workouts</a>
         <a href="{% url 'browse_category_list' %}" class="btn btn-primary">Browse Workouts</a>
         <a href="{% url 'favorite_list' %}" class="btn btn-primary">Favorite Exercises</a>
     </div>
 
     <!-- Meal Planning Section -->
-    <h3>Meal Plan</h3>
+    <h3 class="mt-4">Meal Plan</h3>
     <div class="btn-group mt-3" role="group">
         <a href="{% url 'MealPlan_Searchbar' %}" class="btn btn-primary">MealPlan Searchbar</a>
         <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-primary">Set Dietary Restrictions</a>
@@ -29,7 +30,7 @@
 
 
     <!-- Fitness Tracking Section -->
-    <h3>Fitness Management</h3>
+    <h3 class="mt-4">Fitness Management</h3>
     <div class="btn-group mt-3" role="group">
         <a href="{% url 'set_goals' %}" class="btn btn-primary">Set Daily Fitness Goals</a>
         <a href="{% url 'set_my_gym_goals' %}" class="btn btn-primary">Set Gym Goals</a>

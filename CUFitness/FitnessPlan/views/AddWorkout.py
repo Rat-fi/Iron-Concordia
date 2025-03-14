@@ -23,3 +23,17 @@ def workout_detail(request,pk):
 def workout_list(request):
     workouts = WorkoutPlan.objects.all().order_by('-created_at')
     return render(request, 'fitnessplan/WorkoutList.html', {'workouts': workouts})
+
+def edit_workout(request, pk):
+    workout = get_object_or_404(WorkoutPlan, pk=pk)
+    if request.method == 'POST':
+        form =WorkoutForm(request.POST, instance=workout)
+        if form.is_valid():
+            workout = form.save()
+            messages.success(request, f"Workout Plan {workout.workout_name} has been edited successfully!")
+            return redirect('workout-detail', pk = workout.pk)
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = WorkoutForm(instance=workout)
+    return render(request, 'fitnessplan/EditWorkout.html', {'form': form, 'workout': workout})
