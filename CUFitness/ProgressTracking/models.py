@@ -74,4 +74,63 @@ class ExerciseSession(models.Model):
         return f"{self.user.username} - {self.exercise_type} for {self.exercise_time} sec on {self.recorded_at}"
     
 
-    
+class FitnessActivity(models.Model):
+    EXERCISE_CHOICES = [
+        ('cardio', 'Cardio'),
+        ('weight_lifting', 'Weight Lifting'),
+        ('yoga', 'Yoga'),
+        ('pilates', 'Pilates'),
+        ('hiit', 'HIIT'),
+        ('cycling', 'Cycling'),
+        ('swimming', 'Swimming'),
+        ('running', 'Running'),
+        ('rowing', 'Rowing'),
+        ('boxing', 'Boxing'),
+        ('dancing', 'Dancing'),
+        ('strength_training', 'Strength Training'),
+        ('crossfit', 'CrossFit'),
+        ('stretching', 'Stretching'),
+        ('elliptical_trainer', 'Elliptical Trainer'),
+    ]
+
+    DIFFICULTY_CHOICES = [
+        ('easy', 'Easy'),
+        ('medium', 'Medium'),
+        ('hard', 'Hard'),
+    ]
+
+    exercise_type = models.CharField(
+        max_length=30,
+        choices=EXERCISE_CHOICES,
+        help_text="Type of exercise."
+    )
+    recommended_duration_minutes = models.PositiveIntegerField(
+        help_text="Recommended duration (in minutes) for the activity."
+    )
+    calories_per_minute = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Estimated calories burned per minute."
+    )
+    difficulty_level = models.CharField(
+        max_length=10,
+        choices=DIFFICULTY_CHOICES,
+        help_text="Difficulty level of the activity."
+    )
+    target_category = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Primary target category (e.g., cardiovascular, strength, flexibility)."
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Description of the activity."
+    )
+
+    def __str__(self):
+        return self.get_exercise_type_display()
+
+    class Meta:
+        db_table = 'fitness_activity'
