@@ -9,5 +9,6 @@ urlpatterns = [
     path('progressTracking/', include('ProgressTracking.urls')), #TBD
     path('MealPlan/', include('MealPlan.urls')), 
     path('FitnessPlan/', include('FitnessPlan.urls')),
+    path('Agent/', include('LLMAgent.urls'))
 ]
 

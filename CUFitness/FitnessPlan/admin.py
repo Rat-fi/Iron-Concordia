@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models.AddWorkout import Exercise, WorkoutPlan
 from .models.BrowseWorkout import Category, BrowseWorkout
+from .models.PersonalizedPlan import FitnessPlan
 
 
 @admin.register(Exercise)
@@ -25,3 +26,10 @@ class BrowseWorkoutAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'duration', 'calories', 'category', 'intensity_level')
     list_filter = ('name', 'description', 'duration', 'calories', 'category', 'intensity_level')
     search_fields = ('name',)
+
+
+@admin.register(FitnessPlan)
+class FitnessPlanAdmin(admin.ModelAdmin):
+    list_display = ('user', 'plan_content', 'created_at', 'updated_at')
+    list_filter = ('user', 'created_at', 'updated_at')
+    search_fields = ('user',)

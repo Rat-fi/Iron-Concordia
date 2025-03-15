@@ -245,6 +245,128 @@
             "cooking_materials": "Main ingredient: 1-2 eggs, 2 slices of bread (white, whole wheat, or multigrain), Butter or olive oil (for cooking), Salt and black pepper (to taste), Optional toppings: lettuce, tomato slices, cheese, and mayonnaise. Steps: Toast the Bread: Toast the bread slices until they are golden and slightly crisp. You can use a toaster or toast them in a pan with a little butter for extra flavor. Cook the Egg: Heat a small amount of butter or olive oil in a non-stick pan over medium heat. Crack the egg into the pan and cook it as a fried egg (sunny side up or over-easy) or scramble it, according to your preference. Season with salt and black pepper while cooking. Assemble the Sandwich: Place the cooked egg on one slice of toasted bread. Add any optional toppings you like. Cover with the other slice of toast and gently press together. Serve and Enjoy: Your egg sandwich is ready to be served. Enjoy it as a quick breakfast or a satisfying snack!",
             "created_at": "2025-02-20T00:00:00"
         }
-    ]
+    ],
+    "fitness_activity": [
+    {
+      "exercise_type": "cardio",
+      "recommended_duration_minutes": 30,
+      "calories_per_minute": 8.50,
+      "difficulty_level": "medium",
+      "target_category": "cardiovascular",
+      "description": "Steady aerobic exercise to improve heart health."
+    },
+    {
+      "exercise_type": "weight_lifting",
+      "recommended_duration_minutes": 45,
+      "calories_per_minute": 6.00,
+      "difficulty_level": "hard",
+      "target_category": "strength",
+      "description": "Resistance training to build muscle mass."
+    },
+    {
+      "exercise_type": "yoga",
+      "recommended_duration_minutes": 60,
+      "calories_per_minute": 3.50,
+      "difficulty_level": "easy",
+      "target_category": "flexibility and balance",
+      "description": "Mind-body practice to enhance flexibility and reduce stress."
+    },
+    {
+      "exercise_type": "pilates",
+      "recommended_duration_minutes": 50,
+      "calories_per_minute": 4.00,
+      "difficulty_level": "medium",
+      "target_category": "core strength",
+      "description": "Low-impact exercise to strengthen the core."
+    },
+    {
+      "exercise_type": "hiit",
+      "recommended_duration_minutes": 20,
+      "calories_per_minute": 10.00,
+      "difficulty_level": "hard",
+      "target_category": "cardiovascular and strength",
+      "description": "High intensity interval training for rapid calorie burn."
+    },
+    {
+      "exercise_type": "cycling",
+      "recommended_duration_minutes": 40,
+      "calories_per_minute": 7.00,
+      "difficulty_level": "medium",
+      "target_category": "cardiovascular",
+      "description": "Cycling for endurance and lower body strength."
+    },
+    {
+      "exercise_type": "swimming",
+      "recommended_duration_minutes": 30,
+      "calories_per_minute": 8.00,
+      "difficulty_level": "medium",
+      "target_category": "full body",
+      "description": "Full-body workout with low impact on joints."
+    },
+    {
+      "exercise_type": "running",
+      "recommended_duration_minutes": 30,
+      "calories_per_minute": 9.00,
+      "difficulty_level": "medium",
+      "target_category": "cardiovascular",
+      "description": "Running to boost endurance and heart health."
+    },
+    {
+      "exercise_type": "rowing",
+      "recommended_duration_minutes": 25,
+      "calories_per_minute": 8.50,
+      "difficulty_level": "medium",
+      "target_category": "cardiovascular and strength",
+      "description": "Rowing for both aerobic fitness and muscle toning."
+    },
+    {
+      "exercise_type": "boxing",
+      "recommended_duration_minutes": 45,
+      "calories_per_minute": 9.50,
+      "difficulty_level": "hard",
+      "target_category": "cardiovascular and strength",
+      "description": "Boxing to improve reflexes and strength."
+    },
+    {
+      "exercise_type": "dancing",
+      "recommended_duration_minutes": 60,
+      "calories_per_minute": 5.50,
+      "difficulty_level": "easy",
+      "target_category": "aerobic",
+      "description": "Dance routines to increase fitness and coordination."
+    },
+    {
+      "exercise_type": "strength_training",
+      "recommended_duration_minutes": 50,
+      "calories_per_minute": 6.00,
+      "difficulty_level": "hard",
+      "target_category": "strength",
+      "description": "Weight-based exercises to build overall muscle strength."
+    },
+    {
+      "exercise_type": "crossfit",
+      "recommended_duration_minutes": 45,
+      "calories_per_minute": 8.00,
+      "difficulty_level": "hard",
+      "target_category": "full body",
+      "description": "High-intensity functional movements for overall fitness."
+    },
+    {
+      "exercise_type": "stretching",
+      "recommended_duration_minutes": 20,
+      "calories_per_minute": 2.50,
+      "difficulty_level": "easy",
+      "target_category": "flexibility",
+      "description": "Stretching exercises to improve flexibility and reduce injury risk."
+    },
+    {
+      "exercise_type": "elliptical_trainer",
+      "recommended_duration_minutes": 30,
+      "calories_per_minute": 7.00,
+      "difficulty_level": "medium",
+      "target_category": "cardiovascular",
+      "description": "Low-impact cardiovascular workout on an elliptical machine."
+    }
+  ]
 }
   
