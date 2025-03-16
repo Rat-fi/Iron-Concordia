@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+{% block content %}
+<h2>Your Personalized Fitness Plan</h2>
+
+{% if fitness_plan %}
+  <pre>{{ fitness_plan.plan_content }}</pre>
+  <a href="{% url 'adjust_plan' %}"><button type="button" class="btn btn-primary">Adjust Plan</button></a>
+{% else %}
+  <p>You have not generated a fitness plan yet.</p>
+  <a href="{% url 'collect_user_info' %}"><button type="button" class="btn btn-primary">Generate Now</button></a>
+{% endif %}
+{% endblock %}

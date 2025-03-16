@@ -9,7 +9,7 @@ db_file = 'CUFitness/db.sqlite3'
 
 def load_data(file_path):
     """Load JSON data from a file."""
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def insert_data_into_db(data, db_path):

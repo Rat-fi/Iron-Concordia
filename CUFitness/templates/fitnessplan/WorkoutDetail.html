@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+
+{% block content %}
+
+<html>
+<head>
+    <title>{{ workout.workout_name }} - Detail</title>
+</head>
+<body>
+    <h1>{{ workout.workout_name }}</h1>
+    <p><strong>Duration: </strong>{{ workout.duration }} minutes</p>
+    <p><strong>Description: </strong>{{ workout.description }}</p>
+    <p><strong>Intensity: </strong>{{ workout.intensity_level }}</p>
+    <p><strong>Category: </strong>{{ workout.category }}</p>
+    <p><strong>Total Calories: </strong>{{ workout.calories }}</p>
+
+    <h2>Included Exercises</h2>
+    <ul>
+        {% for exercise in workout.exercise.all %}
+        <li>
+            <strong>Name: </strong>{{ exercise.name }}<br>
+            <strong>Description: </strong>{{ exercise.description }}<br>
+            <strong>Duration: </strong>{{ exercise.duration }} minutes<br>
+            <strong>Intensity: </strong>{{ exercise.intensity_level }}<br>
+            <strong>Category: </strong>{{ exercise.category }}<br>
+            <strong>Calories: </strong>{{ exercise.calories }}
+        </li>
+    {% empty %}
+        <li>There is no any exercise in this Workout</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'workout-create' %}"><button type="button" class="btn btn-primary">Continue to create new Workout</button></a>
+    
+    <a href="{% url 'workout-list' %}"><button type="button" class="btn btn-primary">Check all the Workouts</button></a>
+
+    <a href="{% url 'workout-edit' workout.id %}"><button type="button" class="btn btn-primary">Edit Workout</button></a>
+{% endblock %}

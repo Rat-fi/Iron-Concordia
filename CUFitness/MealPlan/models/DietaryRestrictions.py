@@ -1,11 +1,12 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator
 
 class DietaryRestrictions_MealPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    calories = models.IntegerField(help_text="Calories per serving")
-    protein = models.FloatField(help_text="Protein in grams")
+    calories = models.PositiveIntegerField(help_text="Calories per serving")
+    protein = models.FloatField(validators=[MinValueValidator(0)], help_text="Protein in grams")
     
     is_vegetarian = models.BooleanField(default=False)
     is_vegan = models.BooleanField(default=False)

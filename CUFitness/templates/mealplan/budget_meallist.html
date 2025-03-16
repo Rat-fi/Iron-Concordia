@@ -1,15 +1,14 @@
-"""
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Budget Meal Plan</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MealPlan{% endblock %}
+
+{% block content %}
+<div class="container">
     <h2>Set Your Budget</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Filter</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
     
     <h2>Meals</h2>
@@ -20,6 +19,5 @@
             <li>No meals found within this budget.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
-"""
+</div>
+{% endblock %}

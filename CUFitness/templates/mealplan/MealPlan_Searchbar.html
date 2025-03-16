@@ -1,3 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
+
+{% block content %}
+
+<h2>Meal Plan Searchbar</h2>
+
 <form method="GET" action="/MealPlan/search/">
     <input type="text" name="q" value = "{{ query }}" placeholder="Starting Search..." >
     <select name = 'category'>
@@ -6,7 +14,7 @@
         <option value = "Vegetable" {% if category == "Vegetable" %}selected{% endif %}>Vegetable</option>
         <option value = "Dietary Restrictions" {% if category == "Dietary Restrictions" %}selected{% endif %}>Dietary Restrictions</option>
     </select>
-    <button type="submit">Search</button>
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
     <ul>
@@ -27,3 +35,5 @@
         {% endif %}
 
     </div>
+
+{% endblock %}

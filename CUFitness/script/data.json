@@ -367,6 +367,130 @@
       "target_category": "cardiovascular",
       "description": "Low-impact cardiovascular workout on an elliptical machine."
     }
+  ],
+  "FitnessPlan_exercise":[
+    {
+      "name": "Push-Ups",
+      "description": "A classic bodyweight exercise that primarily targets the chest, shoulders, and triceps. It also engages the core to maintain stability.",
+      "duration": 10,
+      "calories": 100,
+      "intensity_level": "Medium",
+      "category":"Strength"
+    },
+    {
+      "name": "Squats",
+      "description": "A fundamental lower-body exercise that works the quadriceps, hamstrings, and glutes. Squats also help improve balance and core strength.",
+      "duration": 10,
+      "calories": 120,
+      "intensity_level": "Medium",
+      "category":"Strength"
+    },
+    {
+      "name": "Plank",
+      "description": "A core-strengthening exercise where you hold a push-up-like position. Planks build endurance in the abdominal muscles, lower back, and shoulders.",
+      "duration": 10,
+      "calories": 100,
+      "intensity_level": "Low",
+      "category":"Balance"
+    },
+    {
+      "name": "Burpees",
+      "description": "A high-intensity, full-body exercise that combines a squat, push-up, and jump. Burpees boost cardiovascular fitness and overall strength.",
+      "duration": 10,
+      "calories": 240,
+      "intensity_level": "High",
+      "category":"Cardio"
+    },
+    {
+      "name": "Lunges",
+      "description": "A dynamic lower-body movement that targets the quads, glutes, and hamstrings. Lunges also help improve balance and coordination.",
+      "duration": 10,
+      "calories": 100,
+      "intensity_level": "Medium",
+      "category":"Strength"
+    }
+  ],
+  "FitnessPlan_workoutplan":[
+    {
+      "workout_name": "Strength Training",
+      "description": "A combination of strength exercises including Push-Ups, Squats, and Lunges to build muscle and improve stability.",
+      "duration": 30,
+      "calories": 320,
+      "intensity_level": "Medium",
+      "category":"Strength"
+    },
+    {
+      "workout_name": "Cardio Blast",
+      "description": "A high-intensity cardio workout featuring Burpees and Jumping Jacks to elevate heart rate and burn calories.",
+      "duration": 20,
+      "calories": 400,
+      "intensity_level": "High",
+      "category":"Cardio"
+    },
+    {
+      "workout_name": "Core Challenge",
+      "description": "A core-focused routine with Planks and Russian Twists to strengthen the abdominal muscles and improve balance.",
+      "duration": 20,
+      "calories": 200,
+      "intensity_level": "Medium",
+      "category":"Balance"
+    },
+    {
+      "workout_name": "Full-Body Burn",
+      "description": "A total-body workout that combines strength and cardio exercises like Squats, Push-Ups, and Mountain Climbers.",
+      "duration": 40,
+      "calories": 500,
+      "intensity_level": "High",
+      "category":"Full Body"
+    },
+    {
+      "workout_name": "Leg Day Challenge",
+      "description": "An intense lower-body workout featuring Lunges, Squats, and Calf Raises to target the quads, hamstrings, and glutes.",
+      "duration": 30,
+      "calories": 350,
+      "intensity_level": "High",
+      "category":"Strength"
+    }
+  ],
+  "FitnessPlan_category":[
+    {"name": "Strength"},
+    {"name": "Cardio"},
+    {"name": "Flexibility"},
+    {"name": "Balance"}
+  ],
+  "FitnessPlan_browseworkout":[
+    {
+      "name": "Yoga",
+      "description": "A low-impact exercise to enhance flexibility and reduce stress.",
+      "duration": 45,
+      "calories": 200,
+      "category":"Flexibility",
+      "intensity_level": "Low" 
+    },
+    {
+      "name": "Running",
+      "description": "An aerobic exercise to improve cardiovascular fitness.",
+      "duration": 30,
+      "calories": 300,
+      "category":"Cardio",
+      "intensity_level": "High" 
+    },
+    {
+      "name": "Push-Ups",
+      "description": "A basic exercise to strengthen the upper body and core.",
+      "duration": 10,
+      "calories": 100,
+      "category":"Strength",
+      "intensity_level": "Medium" 
+    },
+    {
+      "name": "Plank",
+      "description": "A core strengthening exercise that also improves stability.",
+      "duration": 10,
+      "calories": 100,
+      "category":"Strength",
+      "intensity_level": "Medium" 
+    }
   ]
 }
   

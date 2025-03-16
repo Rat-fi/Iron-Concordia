@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'MealPlan', 
     'ProgressTracking.apps.ProgresstrackingConfig',
     'User',
+    'FitnessPlan',
     'LLMAgent'
 ]
 

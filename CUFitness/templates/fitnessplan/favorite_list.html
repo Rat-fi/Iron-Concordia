@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+
+{% block content %}
+
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Favorite Exercises List</title>
+</head>
+<body>
+    <h1>My Favorites</h1>
+    <ul>
+        {% for exercise in favorites %}
+            <li>
+                <strong>{{ exercise.name }}</strong> — Duration: {{ exercise.duration }} minutes,
+                Description: {{ exercise.description }},
+                Calories: {{ exercise.calories }},
+                Intensity: {{ exercise.intensity_level }},
+                Category: {{ exercise.category.name }},
+                <a href="{% url 'toggle_favorite' exercise.id %}" title="Remove from Favorites">★</a>
+            </li>
+        {% empty %}
+            <li>There is no any favorite exercises</li>
+        {% endfor %}
+    </ul>
+    <a href = "{% url 'browse_exercise_list' %}"><button type="button" class="btn btn-primary">Return to Exercises List</button></a>
+</body>
+</html>
+{% endblock %}
+
