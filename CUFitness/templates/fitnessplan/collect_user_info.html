@@ -8,7 +8,7 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Generate Fitness Plan</button>
+  <button type="submit" class="btn btn-success">Generate Fitness Plan</button>
 </form>
 
 {% if form.non_field_errors %}

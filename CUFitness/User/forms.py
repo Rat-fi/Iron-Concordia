@@ -7,7 +7,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'fitness_preference', 'dietary_preference']
+        fields = ['username', 'email', 'password1', 'password2',]
 
 class EditProfileForm(UserChangeForm):
     password1 = forms.CharField(widget=forms.PasswordInput, required=False, label="New Password")
@@ -15,7 +15,7 @@ class EditProfileForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'fitness_preference', 'dietary_preference']
+        fields = ['username', 'email', 'password1', 'password2']
 
     def clean(self):
         cleaned_data = super().clean()

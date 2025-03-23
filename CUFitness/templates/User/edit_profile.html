@@ -34,17 +34,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="id_fitness_preference" class="form-label">Fitness Preference</label>
-            {{ form.fitness_preference }}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_dietary_preference" class="form-label">Dietary Preference</label>
-            {{ form.dietary_preference }}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_password1" class="form-label">New Password (optional)</label>
+            <label for="id_password1" class="form-label">New Password</label>
             {{ form.password1 }}
         </div>
 
@@ -54,7 +44,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Save Changes</button>
-        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-danger">Cancel</a>
     </form>
 </div>
 {% endblock %}

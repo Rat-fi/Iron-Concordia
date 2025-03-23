@@ -30,9 +30,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
-    fitness_preference = models.CharField(max_length=255, blank=True, null=True)
-    dietary_preference = models.CharField(max_length=255, blank=True, null=True)
-
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
