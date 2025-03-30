@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard - FitnessPlan{% endblock %}
 {% block content %}
-<h2>Adjust Your Fitness Plan</h2>
+<html>
 
-<form method="post">
-  {% csrf_token %}
-  <textarea name="plan_content" rows="15" style="width: 100%;">{{ fitness_plan.plan_content }}</textarea>
-  <br><br>
-  <button type="submit" class="btn btn-primary">Save Adjustments</button>
-</form>
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>Adjust Your Fitness Plan</title>
+</head>
+
+<body>
+    <h2>Adjust Your Fitness Plan</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="plan_content" rows="15" style="width: 100%;">{{ fitness_plan.plan_content }}</textarea>
+        <button type="submit" class="btn btn-success mt-3">Save</button>
+        <a href="{% url 'view_plan' %}"><button type="button" class="btn btn-danger mt-3">Cancel</button></a>
+    </form>
+    {% endblock %}
+</body>

@@ -4,65 +4,79 @@
 
 {% block content %}
 <div class="container">
-    <h2>Welcome, {{ user.username }}!</h2>
-    <p>This is your dashboard where you can manage your fitness plans and track progress.</p>
-
-    <!-- Fitness Plan Section -->
-    <h3 class="mt-4">Fitness Plan</h3>
-    <div class="btn-group mt-3" role="group">
-        <a href="{% url 'workout-create' %}" class="btn btn-primary">Create Workouts</a>
-        <a href="{% url 'workout-list' %}" class="btn btn-primary">Review and Edit Workouts</a>
-        <a href="{% url 'browse_category_list' %}" class="btn btn-primary">Browse Workouts</a>
-        <a href="{% url 'favorite_list' %}" class="btn btn-primary">Favorite Exercises</a>
-        <a href="{% url 'collect_user_info' %}" class="btn btn-primary">Personal Information</a>
-        <a href="{% url 'view_plan' %}" class="btn btn-primary">Personalized FitnessPlan</a>
+    <div style="display: flex; ">
+        <h2>{{ user.username }}</h2>
+        <div style="margin-left: auto;">
+            <div style="display: grid; grid-template-columns: auto auto auto; gap: 10px;">
+                <a href="{% url 'edit_profile' %}" class="btn btn-warning">Edit Profile</a>
+                <a href="{% url 'password_reset' %}" class="btn btn-info">Reset Password</a>
+                <a href="{% url 'delete_account' %}" class="btn btn-danger">Delete Account</a>
+            </div>
+            <div class="mt-3 text-end">
+                <a class="btn btn-outline-secondary" href="{% url 'LLMAgent:chat' %}">
+                    💬 AI Coach
+                </a>
+            </div>
+            {% if not user.is_verified %}
+            <div class="alert alert-warning mt-3">
+                Your email is not verified!
+                <a href="{% url 'verify_email' %}">Verify now</a>
+            </div>
+            {% endif %}
+        </div>
     </div>
-
-    <!-- Meal Planning Section -->
-    <h3 class="mt-4">Meal Plan</h3>
-    <div class="btn-group mt-3" role="group">
-        <a href="{% url 'MealPlan_Searchbar' %}" class="btn btn-primary">MealPlan Searchbar</a>
-        <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-primary">Set Dietary Restrictions</a>
-        <a href="{% url 'meal_plan' %}" class="btn btn-primary">Meal Plan</a>
-        <a href="{% url 'budget_meallist' %}" class="btn btn-primary">Budget Meal List</a>
-        <a href="{% url 'quick_meal_list' %}" class="btn btn-primary">Quick Meal list</a>
-        <a href="{% url 'campus_options' %}" class="btn btn-primary">Campus Dining Options</a>
-        <a href="{% url 'newcookuser_list' %}" class="btn btn-primary">Meal Instructions</a>
-    </div>
+    <div style="margin: 5% 0;">
+        {% if not user.is_verified %}
+        <div class="alert alert-warning mt-3">
+            Your email is not verified!
+            <a href="{% url 'verify_email' %}">Verify now</a>
+        </div>
+        {% endif %}
 
 
-    <!-- Fitness Tracking Section -->
-    <h3 class="mt-4">Fitness Management</h3>
-    <div class="btn-group mt-3" role="group">
-        <a href="{% url 'set_goals' %}" class="btn btn-primary">Set Daily Fitness Goals</a>
-        <a href="{% url 'set_my_gym_goals' %}" class="btn btn-primary">Set Gym Goals</a>
-        <a href="{% url 'track_exercise' %}" class="btn btn-primary">Track Exercise</a>
-        <a href="{% url 'today_exercise_records' %}" class="btn btn-primary">Today's Exercise Records</a>
-        <a href="{% url 'daily_summary' %}" class="btn btn-primary">Daily Summary</a>
-        <a href="{% url 'weekly_summary' %}" class="btn btn-primary">Weekly Summary</a>
-        <a href="{% url 'monthly_summary' %}" class="btn btn-primary">Monthly Summary</a>
-        <a href="{% url 'weekly_activity_chart' %}" class="btn btn-primary">Weekly Activity Chart</a>
-        <a href="{% url 'history_activity' %}" class="btn btn-primary">History Activity</a>
+        <!-- Fitness Plan Section -->
+        <div style="display: flex;">
+            <div style="text-align: center; margin: 0 10px">
+                <h3 class="mt-4">Fitness Plan</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <a href="{% url 'workout-create' %}" class="btn btn-primary">Create Workouts</a>
+                    <a href="{% url 'workout-list' %}" class="btn btn-primary">My <br/> Workouts</a>
+                    <a href="{% url 'browse_exercise_list' %}" class="btn btn-primary">Browse Exercises</a>
+                    <a href="{% url 'collect_user_info' %}" class="btn btn-primary">Personal Information</a>
+                    <a href="{% url 'view_plan' %}" class="btn btn-primary">Personalized FitnessPlan</a>
+                </div>
+            </div>
 
-    </div>
+            <!-- Meal Planning Section -->
+            <div style="text-align: center; margin: 0 10px">
+                <h3 class="mt-4">Meal Plan</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <a href="{% url 'MealPlan_Searchbar' %}" class="btn btn-primary">MealPlan Searchbar</a>
+                    <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-primary">Set Dietary Restrictions</a>
+                    <a href="{% url 'meal_plan' %}" class="btn btn-primary">Meal Plan</a>
+                    <a href="{% url 'budget_meallist' %}" class="btn btn-primary">Budget Meal List</a>
+                    <a href="{% url 'quick_meal_list' %}" class="btn btn-primary">Quick Meal list</a>
+                    <a href="{% url 'campus_options' %}" class="btn btn-primary">Campus Dining Options</a>
+                    <a href="{% url 'newcookuser_list' %}" class="btn btn-primary">Meal Instructions</a>
+                </div>
+            </div>
 
-    <!-- Account Settings Section -->
-    <h3 class="mt-4">Account Settings</h3>
-    <div class="btn-group mt-3" role="group">
-        <a href="{% url 'edit_profile' %}" class="btn btn-warning">Edit Profile</a>
-        <a href="{% url 'password_reset' %}" class="btn btn-info">Reset Password</a>
-        <a href="{% url 'delete_account' %}" class="btn btn-danger">Delete Account</a>
-    </div>
-
-    {% if not user.is_verified %}
-    <div class="alert alert-warning mt-3">
-        Your email is not verified!
-        <a href="{% url 'verify_email' %}">Verify now</a>
-    </div>
-    {% endif %}
-
-    <div class="mt-4">
-        <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            <!-- Fitness Tracking Section -->
+            <div style="text-align: center; margin: 0 10px">
+                <h3 class="mt-4">Fitness Management</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <a href="{% url 'set_goals' %}" class="btn btn-primary">Set Daily Fitness Goals</a>
+                    <a href="{% url 'set_my_gym_goals' %}" class="btn btn-primary">Set Gym Goals</a>
+                    <a href="{% url 'track_exercise' %}" class="btn btn-primary">Track Exercise</a>
+                    <a href="{% url 'today_exercise_records' %}" class="btn btn-primary">Today's Exercise Records</a>
+                    <a href="{% url 'daily_summary' %}" class="btn btn-primary">Daily Summary</a>
+                    <a href="{% url 'weekly_summary' %}" class="btn btn-primary">Weekly Summary</a>
+                    <a href="{% url 'monthly_summary' %}" class="btn btn-primary">Monthly Summary</a>
+                    <a href="{% url 'weekly_activity_chart' %}" class="btn btn-primary">Weekly Activity Chart</a>
+                    <a href="{% url 'history_activity' %}" class="btn btn-primary">History Activity</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

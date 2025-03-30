@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FitnessPlan{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">🏋️ Exercise Explorer</h2>
+
+    <!-- Category Filter Form -->
+    <form method="get" action="{% url 'browse_exercise_list' %}" class="mb-4">
+        <div class="mb-3">
+            <label><strong>Filter by Categories:</strong></label><br>
+            {% for category in categories %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="categories" value="{{ category.id }}"
+                        {% if category.id|stringformat:"s" in selected_categories %}checked{% endif %}>
+                    <label class="form-check-label">{{ category.name }}</label>
+                </div>
+            {% endfor %}
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" name="favorites_only" value="1"
+                    {% if favorites_only %}checked{% endif %}>
+                <label class="form-check-label">
+                    Show Only My Favorites
+                </label>
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+    
+
+    <!-- Exercises Table -->
+    {% if exercises %}
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Duration</th>
+                    <th>Description</th>
+                    <th>Calories</th>
+                    <th>Intensity</th>
+                    <th>Category</th>
+                    {% if request.user.is_authenticated %}
+                    <th>Favorite</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for exercise in exercises %}
+                <tr>
+                    <td><strong>{{ exercise.name }}</strong></td>
+                    <td>{{ exercise.duration }} min</td>
+                    <td>{{ exercise.description }}</td>
+                    <td>{{ exercise.calories }}</td>
+                    <td>{{ exercise.intensity_level }}</td>
+                    <td>{{ exercise.category.name }}</td>
+                    {% if request.user.is_authenticated %}
+                    <td class="text-center">
+                        <a href="{% url 'toggle_favorite' exercise.id %}" title="{% if request.user in exercise.favorited_by.all %}Remove from Favorites{% else %}Add to Favorites{% endif %}">
+                            {% if request.user in exercise.favorited_by.all %}
+                                <span style="font-size: 1.5em; color: gold;">★</span>
+                            {% else %}
+                                <span style="font-size: 1.5em; color: lightgray;">☆</span>
+                            {% endif %}
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-warning text-center">No exercises found for selected categories.</div>
+    {% endif %}
+</div>
+{% endblock %}
