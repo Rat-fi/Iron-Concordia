@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUFitness{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Awards and Badges</title>
+</head>
+<body>
+    <h1>My Awards and Badges</h1>
+
+    <h2>Badges</h2>
+    {% if badges %}
+      <ul>
+        {% for user_badge in badges %}
+          <li>
+            {% if user_badge.badge.icon %}
+              <img src="{{ user_badge.badge.icon.url }}" alt="{{ user_badge.badge.name }}" style="height:50px;">
+            {% endif %}
+            <strong>{{ user_badge.badge.name }}</strong> - {{ user_badge.badge.description }}
+            <br>
+            Obtained time:{{ user_badge.awarded_at|date:"Y-m-d H:i" }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Haven't earned the badge yet.</p>
+    {% endif %}
+
+    <h2>Awards</h2>
+    {% if awards %}
+      <ul>
+        {% for user_award in awards %}
+          <li>
+            {% if user_award.award.icon %}
+              <img src="{{ user_award.award.icon.url }}" alt="{{ user_award.award.name }}" style="height:50px;">
+            {% endif %}
+            <strong>{{ user_award.award.name }}</strong> - {{ user_award.award.description }}
+            <br>
+            Obtained time:{{ user_award.awarded_at|date:"Y-m-d H:i" }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Haven't earned the award yet.</p>
+    {% endif %}
+
+
+</body>
+</html>
+{% endblock %}

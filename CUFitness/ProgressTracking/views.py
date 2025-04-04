@@ -5,7 +5,8 @@ from django.http import HttpResponse
 import datetime, calendar
 from django.contrib.auth.decorators import login_required
 from .models import DailyFitnessGoal, Question, GymGoal, ExerciseSession, exercises
-from django.db.models import Sum
+from .models import Badge, UserBadge, Award, UserAward
+from django.db.models import Sum, Max
 import json
 
 
@@ -117,14 +118,97 @@ def track_exercise(request):
         except ValueError:
             duration = 0
 
-        ExerciseSession.objects.create(
+        new_session = ExerciseSession.objects.create(
             user=request.user,
             exercise_type=exercise_type,
             exercise_time=duration
         )
         context['message'] = "Your exercise session has been recorded."
-    
+
+        streak_day = 5
+        today = datetime.date.today()
+        dates = [today - datetime.timedelta(days=i) for i in range(streak_day)]
+        sessions_dates = ExerciseSession.objects.filter(
+            user = request.user,
+            recorded_at__date__in=dates
+        ).values_list('recorded_at__date', flat=True).distinct()
+        if len(set(sessions_dates)) == streak_day:
+            if not UserBadge.objects.filter(user=request.user, badge__name="5 Day Streak").exists():
+                badge, created = Badge.objects.get_or_create(
+                    name = "5 Day Streak",
+                    defaults = {'description': 'Congratulations! You have exercised 5 days in a row.'}
+                )
+                UserBadge.objects.create(user=request.user, badge=badge)
+                context['badge_message'] = "Congratulations! You have earned the 5 Day Streak badge."
+
+        if new_session.recorded_at.time() < datetime.time(7, 0):
+            if not UserBadge.objects.filter(user=request.user, badge__name="Early Bird").exists():
+                badge, created = Badge.objects.get_or_create(
+                    name="Early Bird",
+                    defaults={'description': 'Great job getting your workout in early before 7 AM!'}
+                )
+                UserBadge.objects.create(user=request.user, badge=badge)
+                context['badge_message'] = context.get('badge_message', '') + " You've earned the 'Early Bird' badge!"
+
+        cumulative_days = ExerciseSession.objects.filter(user=request.user) \
+            .values_list('recorded_at__date', flat=True).distinct().count()
+
+        step = 50
+        cumulative_thresholds = list(range(step, cumulative_days + 1, step))
+
+        for threshold in cumulative_thresholds:
+            badge_name = f"{threshold} Day Milestone"
+            if not UserBadge.objects.filter(user=request.user, badge__name=badge_name).exists():
+                badge, created = Badge.objects.get_or_create(
+                    name=badge_name,
+                    defaults={'description': f"Congratulations! You have exercised on {threshold} different days."}
+                )
+                UserBadge.objects.create(user=request.user, badge=badge)
+                context['badge_message'] = context.get('badge_message', '') + f" You've earned the '{badge_name}' badge!"
+
+
+        if exercise_type == 'elliptical_trainer':
+            elliptical_count = ExerciseSession.objects.filter(user=request.user, exercise_type= 'elliptical_trainer').count()
+            if elliptical_count == 1:
+                award, created = Award.objects.get_or_create(
+                    name="My First Elliptical Workout",
+                    defaults={'description': 'Great job on completing your first elliptical workout!'}
+                )
+                if not UserAward.objects.filter(user=request.user, award=award).exists():
+                    UserAward.objects.create(user=request.user, award=award)
+                    context['award_message'] = "You've earned the 'My First Elliptical Workout' award!"
+
+        prev_best = ExerciseSession.objects.filter(
+            user=request.user, 
+            exercise_type=exercise_type
+        ).exclude(id=new_session.id).aggregate(max_time=Max('exercise_time'))['max_time']
+        if prev_best is None or duration > prev_best:
+            
+            exercise_dict = dict(exercises)
+            award_name = f"New Move Record for {exercise_dict.get(exercise_type, exercise_type)}"
+            award, created = Award.objects.get_or_create(
+                name=award_name,
+                defaults={'description': f"Congratulations on setting a new record for {exercise_dict.get(exercise_type, exercise_type)}!"}
+            )
+            if not UserAward.objects.filter(user=request.user, award=award).exists():
+                UserAward.objects.create(user=request.user, award=award)
+                if 'award_message' in context:
+                    context['award_message'] += f" Also, you've earned the '{award_name}' award!"
+                else:
+                    context['award_message'] = f"You've earned the '{award_name}' award!"
+
     return render(request, 'progressTracking/trackExercise.html', context)
+
+@login_required
+def my_awards(request):
+
+    user_badges = UserBadge.objects.filter(user=request.user)
+    user_awards = UserAward.objects.filter(user=request.user)
+    context = {
+         'badges': user_badges,
+         'awards': user_awards,
+    }
+    return render(request, 'progressTracking/awards.html', context)
 
 
 @login_required

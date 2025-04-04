@@ -134,3 +134,36 @@ class FitnessActivity(models.Model):
 
     class Meta:
         db_table = 'fitness_activity'
+
+
+class Badge(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+    icon = models.ImageField(upload_to='badges/', blank=True, null=True, default='badges/default_badge.png')
+
+    def __str__(self):
+        return self.name
+    
+class UserBadge(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    awarded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Congratulations, you earned {self.badge.name}"
+    
+class Award(models.Model):
+    name = models.CharField(max_length=255, unique = True)
+    description = models.TextField(blank=True)
+    icon = models.ImageField(upload_to='awards/', blank=True, null=True, default='awards/default_award.png')
+
+    def __str__(self):
+        return self.name
+    
+class UserAward(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    award = models.ForeignKey(Award, on_delete=models.CASCADE)
+    awarded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Congratulations, you earned {self.award.name}"
