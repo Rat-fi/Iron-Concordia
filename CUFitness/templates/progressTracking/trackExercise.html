@@ -38,6 +38,19 @@
             {{ message }}
           </div>
         {% endif %}
+
+        {% if badge_message %}
+          <div class="alert alert-success">
+            {{ badge_message }}
+          </div>
+        {% endif %}
+
+        {% if award_message %}
+        <div class="alert alert-success">
+          {{ award_message }}
+        </div>
+        {% endif %}
+        
         
         <form method="post" id="exercise-form">
           {% csrf_token %}
