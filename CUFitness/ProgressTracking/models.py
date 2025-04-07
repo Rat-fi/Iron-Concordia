@@ -39,6 +39,20 @@ class GymGoal(models.Model):
     crossfit = models.FloatField(default=0)
     stretching = models.FloatField(default=0)
     elliptical_trainer = models.FloatField(default=0)
+
+    kickboxing = models.FloatField(default=0)
+    calisthenics = models.FloatField(default=0)
+    tai_chi = models.FloatField(default=0)
+    mountain_climbers = models.FloatField(default=0)
+    trx_training = models.FloatField(default=0)
+    power_yoga = models.FloatField(default=0)
+    hiking = models.FloatField(default=0)
+    sled_push = models.FloatField(default=0)
+    water_aerobics = models.FloatField(default=0)
+    zumba = models.FloatField(default=0)
+    jump_rope = models.FloatField(default=0)
+
+
     goal_date = models.DateField(auto_now=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -61,6 +75,18 @@ exercises = [
     ('crossfit', 'CrossFit'),
     ('stretching', 'Stretching'),
     ('elliptical_trainer', 'Elliptical Trainer'),
+
+    ('kickboxing', 'Kickboxing'),
+    ('calisthenics', 'Calisthenics'),
+    ('tai_chi', 'Tai Chi'),
+    ('mountain_climbers', 'Mountain Climbers'),
+    ('trx_training', 'TRX Training'),
+    ('power_yoga', 'Power yoga'),
+    ('hiking', 'Hiking'),
+    ('sled_push', 'Sled Push'),
+    ('water_aerobics', 'Water Aerobics'),
+    ('zumba', 'Zumba'),
+    ('jump_rope', 'Jump Rope'),
 ]
 
 class ExerciseSession(models.Model):
@@ -91,7 +117,20 @@ class FitnessActivity(models.Model):
         ('crossfit', 'CrossFit'),
         ('stretching', 'Stretching'),
         ('elliptical_trainer', 'Elliptical Trainer'),
+
+        ('kickboxing', 'Kickboxing'),
+        ('calisthenics', 'Calisthenics'),
+        ('tai_chi', 'Tai Chi'),
+        ('mountain_climbers', 'Mountain Climbers'),
+        ('trx_training', 'TRX Training'),
+        ('power_yoga', 'Power yoga'),
+        ('hiking', 'Hiking'),
+        ('sled_push', 'Sled Push'),
+        ('water_aerobics', 'Water Aerobics'),
+        ('zumba', 'Zumba'),
+        ('jump_rope', 'Jump Rope'),
     ]
+
 
     DIFFICULTY_CHOICES = [
         ('easy', 'Easy'),

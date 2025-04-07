@@ -7,11 +7,15 @@ from MealPlan.models.DietaryRestrictions import DietaryRestrictions, DietaryRest
 from MealPlan.models.QuickMeal import QuickMeal
 from MealPlan.models.NewCookUser import MealInstructions
 from MealPlan.models.CampusOptions import CampusOptions_MenuItem, CampusOptions_Restaurant
+from .models import FitnessPlan
+from ProgressTracking.models import GymGoal
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 import traceback
 import json
+import re
+
 
 load_dotenv()
 
@@ -84,33 +88,6 @@ def get_available_meal_plans():
     
     return list(meal_plans)
 
-def get_meal_instructions():
-    """Get all available meal instructions from the database"""
-    instructions = MealInstructions.objects.all().values(
-        'id',
-        'name',
-        'difficulty',
-        'dietary_restrictions',
-        'price',
-        'prepare_time',
-        'calories',
-        'protein',
-        'steps'
-    )
-    
-    return list(instructions)
-
-def get_quick_meals():
-    """Get all available quick meals from the database"""
-    quick_meals = QuickMeal.objects.all().values(
-        'id',
-        'name',
-        'preparation_time',
-        'cooking_materials'
-    )
-    
-    return list(quick_meals)
-
 def get_restaurant_options():
     """Get all available restaurant options from the database"""
     restaurants = CampusOptions_Restaurant.objects.all().values(
@@ -138,8 +115,6 @@ def generate_fitness_response(conversation_history, user_data=None):
     """Generate a response using Gemini 1.5 Flash with constraints from the database"""
     available_activities = get_available_activities()
     available_meal_plans = get_available_meal_plans()
-    meal_instructions = get_meal_instructions()
-    quick_meals = get_quick_meals()
     restaurant_options = get_restaurant_options()
     
     activities_text = ""
@@ -165,14 +140,6 @@ def generate_fitness_response(conversation_history, user_data=None):
         restrictions_str = ", ".join(restrictions) if restrictions else "No specific restrictions"
         meal_plans_text += f"- {meal['name']}: {meal['calories']} calories, {meal['protein']}g protein. Dietary info: {restrictions_str}. {meal['description'] or 'No description available'}\n"
     
-    instructions_text = ""
-    for instruction in meal_instructions:
-        instructions_text += f"- {instruction['name']} (Cook at home - {instruction['difficulty']} difficulty): {instruction['calories']} calories, {instruction['protein']}g protein, prep time: {instruction['prepare_time']} mins, price: ${instruction['price']}. Dietary restrictions: {instruction['dietary_restrictions'] or 'None'}\n"
-    
-    quick_meals_text = ""
-    for meal in quick_meals:
-        quick_meals_text += f"- {meal['name']} (Quick meal): Preparation time {meal['preparation_time']} minutes. Requires: {meal['cooking_materials']}\n"
-    
     restaurant_text = ""
     for restaurant in restaurant_options:
         restaurant_text += f"- {restaurant['name']} (Rating: {restaurant['rating']})\n"
@@ -197,16 +164,16 @@ Available Exercises:
     prompt += "\nAvailable Meal Plans:\n"
     prompt += meal_plans_text
     
-    prompt += "\nHome Cooking Meals:\n"
-    prompt += instructions_text
-    
-    prompt += "\nQuick Meals:\n"
-    prompt += quick_meals_text
-    
     prompt += "\nRestaurant Options:\n"
     prompt += restaurant_text
     
-    if user_data:
+    if user_data and user_data.get('user_id'):
+        try:
+            last_plan = FitnessPlan.objects.filter(user_id=user_data['user_id'], confirmed=True).latest('created_at')
+            prompt += "\nPrevious Confirmed Fitness Plan:\n"
+            prompt += last_plan.plan_content + "\n"
+        except FitnessPlan.DoesNotExist:
+            prompt += "\n(No previous confirmed plan found.)\n"
         dietary_restrictions = None
         if user_data.get('user_id'):
             dietary_restrictions = get_user_dietary_restrictions(user_data.get('user_id'))
@@ -238,6 +205,13 @@ User information:
     
     prompt += "\nRespond to the user's last message as a helpful fitness and nutrition coach. Remember to ONLY suggest exercises and meals from the lists provided above. When recommending meals, be careful to respect any dietary restrictions the user has mentioned:"
     
+    prompt += """
+Now respond to the user based on their last question.
+Keep your reply structured and helpful.
+
+End your reply by asking if they're satisfied with the plan, and remind them they can confirm it.
+"""
+
     try:
         response = model.generate_content(prompt)
         return response.text
@@ -251,82 +225,162 @@ def chat(request):
     if not request.session.session_key:
         request.session.create()
     session_key = request.session.session_key
-    
+
     if request.method == "GET":
-        conversation_history = ChatMessage.objects.filter(session_key=session_key).order_by('timestamp')
+        if request.user.is_authenticated:
+            conversation_history = ChatMessage.objects.filter(user=request.user).order_by('timestamp')
+        else:
+            conversation_history = ChatMessage.objects.filter(session_key=session_key).order_by('timestamp')
         return render(request, "LLMAgent/chat.html", {"conversation_history": conversation_history})
-    
+
     elif request.method == "POST":
         try:
             user_message = request.POST.get("message", "")
             if not user_message:
                 return JsonResponse({"error": "No message provided"}, status=400)
             
+            if request.user.is_authenticated and user_message.strip().lower() == "confirm plan":
+                last_plan = FitnessPlan.objects.filter(user=request.user, confirmed=False).order_by('-created_at').first()
+
+                if not last_plan:
+                    # Even if already confirmed or not found, exit here
+                    return JsonResponse({"response": "⚠️ No unconfirmed fitness plan found. Please generate a new one first."})
+
+                goal, _ = GymGoal.objects.get_or_create(user=request.user)
+
+                all_exercises = [
+                    'cardio', 'weight_lifting', 'yoga', 'pilates', 'hiit', 'cycling', 'swimming',
+                    'running', 'rowing', 'boxing', 'dancing', 'strength_training', 'crossfit',
+                    'stretching', 'elliptical_trainer', 'kickboxing', 'calisthenics', 'tai_chi',
+                    'mountain_climbers', 'trx_training', 'power_yoga', 'hiking', 'sled_push',
+                    'water_aerobics', 'zumba', 'jump_rope'
+                ]
+
+                plan_lower = last_plan.plan_content.lower()
+                updated = False
+
+                for exercise in all_exercises:
+                    pattern = rf"{exercise}.*?(\d+)\s*minutes"
+                    match = re.search(pattern, plan_lower)
+                    if match:
+                        duration = int(match.group(1))
+                        current_value = getattr(goal, exercise, 0)
+                        setattr(goal, exercise, current_value + duration)
+                        updated = True
+                        print(f"[DEBUG] {exercise}: +{duration} ➜ {current_value + duration}")
+
+                if updated:
+                    goal.save()
+                    print("[DEBUG] ✅ GymGoal saved with durations from confirmed plan.")
+                else:
+                    print("[DEBUG] ⚠️ Plan confirmed but no exercises found.")
+
+                last_plan.confirmed = True
+                last_plan.save()
+
+                ChatMessage.objects.create(
+                    session_key=session_key,
+                    user=request.user,
+                    role='ai',
+                    message="✅ Your fitness plan has been confirmed and saved to your Gym Goals! Let's keep it up!"
+                )
+
+                return JsonResponse({"response": "✅ Plan confirmed and saved to Gym Goals!"})  # 👈 THIS stops it from continuing
+
+
+
+
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='user',
                 message=user_message
             )
-            
-            history = list(
-                ChatMessage.objects.filter(session_key=session_key)
-                .order_by('timestamp')
-                .values('role', 'message')
-            )
-            
+
+            if request.user.is_authenticated:
+                history = list(
+                    ChatMessage.objects.filter(user=request.user).order_by('timestamp').values('role', 'message')
+                )
+            else:
+                history = list(
+                    ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
+                )
+
             ai_response = generate_fitness_response(history)
+            if not any(x in ai_response.lower() for x in [
+                    "reply with 'confirm plan'",
+                    "reply 'confirm plan'",
+                    "respond with 'confirm plan'"
+                ]):
+                ai_response += "\n\n❓ Are you satisfied with this fitness plan? Reply with 'confirm plan' if you want me to save it as your official Gym Goal."
+            if request.user.is_authenticated and "workout plan" in ai_response.lower() and "nutrition plan" in ai_response.lower():
+                FitnessPlan.objects.create(user=request.user, plan_content=ai_response)
+                print("[DEBUG] Saved new unconfirmed FitnessPlan.")
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='ai',
                 message=ai_response
             )
-            
+
             return JsonResponse({"response": ai_response})
-            
+
         except Exception as e:
             print(f"Error in chat view: {e}")
             print(traceback.format_exc())
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
 
 @ensure_csrf_cookie
 def new_chat(request):
     """Start a new chat session"""
     if request.method == "POST":
         try:
-            request.session.flush()
-            request.session.create()
+            if not request.session.session_key:
+                request.session.create()
+            else:
+                request.session.modified = True
+
             session_key = request.session.session_key
-            
+
+            # 💥 Delete old chat messages for the user or session
+            if request.user.is_authenticated:
+                ChatMessage.objects.filter(user=request.user).delete()
+            else:
+                ChatMessage.objects.filter(session_key=session_key).delete()
+
             activity_types = FitnessActivity.objects.values_list('exercise_type', flat=True).distinct()
             activity_list = ", ".join([activity.replace('_', ' ').title() for activity in activity_types])
-            
             home_meals_count = MealInstructions.objects.count()
             restaurant_count = CampusOptions_Restaurant.objects.count()
-            
-            welcome_message = f"""Hi! I'm your fitness and nutrition AI coach. 
-            
-I can help you with:
-- Exercise recommendations including {activity_list}
-- Nutrition advice with {home_meals_count} home cooking recipes 
-- Campus dining options from {restaurant_count} nearby restaurants
 
-Let me know your fitness goals, dietary preferences, or if you're looking for a specific type of meal!"""
-            
+            welcome_message = f"""Hi! I'm your fitness and nutrition AI coach. 
+
+                I can help you with:
+                - Exercise recommendations including {activity_list}
+                - Nutrition advice with {home_meals_count} home cooking recipes 
+                - Campus dining options from {restaurant_count} nearby restaurants
+
+                Let me know your fitness goals, dietary preferences, or if you're looking for a specific type of meal!"""
+
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='ai',
                 message=welcome_message
             )
-            
+
             return JsonResponse({"status": "success"})
+
         except Exception as e:
             print(f"Error in new_chat view: {e}")
             print(traceback.format_exc())
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
 
 @ensure_csrf_cookie
 def generate_fitness_plan(request):
@@ -336,7 +390,7 @@ def generate_fitness_plan(request):
             if not request.session.session_key:
                 request.session.create()
             session_key = request.session.session_key
-            
+
             try:
                 user_data = json.loads(request.body)
             except json.JSONDecodeError:
@@ -351,34 +405,45 @@ def generate_fitness_plan(request):
                     'health_restrictions': request.POST.get('health_restrictions'),
                     'dietary_restrictions': request.POST.get('dietary_restrictions')
                 }
-            
+
             user_message = "Please create a fitness and nutrition plan based on my profile information."
+
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='user',
                 message=user_message
             )
-            
-            history = list(
-                ChatMessage.objects.filter(session_key=session_key)
-                .order_by('timestamp')
-                .values('role', 'message')
-            )
-            
+
+            if request.user.is_authenticated:
+                history = list(
+                    ChatMessage.objects.filter(user=request.user).order_by('timestamp').values('role', 'message')
+                )
+            else:
+                history = list(
+                    ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
+                )
+
             ai_response = generate_fitness_response(history, user_data)
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='ai',
                 message=ai_response
             )
-            
+
+            # Store plan in DB as unconfirmed
+            if request.user.is_authenticated:
+                from .models import FitnessPlan
+                FitnessPlan.objects.create(user=request.user, plan_content=ai_response)
+
             return JsonResponse({"response": ai_response})
-            
+
         except Exception as e:
             print(f"Error in generate_fitness_plan view: {e}")
             print(traceback.format_exc())
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @ensure_csrf_cookie
@@ -389,7 +454,7 @@ def recommend_meals(request):
             if not request.session.session_key:
                 request.session.create()
             session_key = request.session.session_key
-            
+
             try:
                 user_data = json.loads(request.body)
             except json.JSONDecodeError:
@@ -400,32 +465,38 @@ def recommend_meals(request):
                     'protein_target': request.POST.get('protein_target'),
                     'dietary_restrictions': request.POST.get('dietary_restrictions')
                 }
-            
+
             user_message = f"Please recommend meals based on my dietary preferences. I'm looking for {user_data.get('meal_type', 'any')} meals."
+
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='user',
                 message=user_message
             )
-            
-            history = list(
-                ChatMessage.objects.filter(session_key=session_key)
-                .order_by('timestamp')
-                .values('role', 'message')
-            )
-            
+
+            if request.user.is_authenticated:
+                history = list(
+                    ChatMessage.objects.filter(user=request.user).order_by('timestamp').values('role', 'message')
+                )
+            else:
+                history = list(
+                    ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
+                )
+
             ai_response = generate_fitness_response(history, user_data)
             ChatMessage.objects.create(
                 session_key=session_key,
+                user=request.user if request.user.is_authenticated else None,
                 role='ai',
                 message=ai_response
             )
-            
+
             return JsonResponse({"response": ai_response})
-            
+
         except Exception as e:
             print(f"Error in recommend_meals view: {e}")
             print(traceback.format_exc())
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=405)
