@@ -117,6 +117,10 @@ def generate_fitness_response(request, conversation_history, user_data=None):
 
     dietary_restrictions = get_user_dietary_restrictions(request)
 
+    user_body_info = None
+    if request.user.is_authenticated:
+        user_body_info = getattr(request.user, 'body_info', None)
+
     # Assemble activities section
     activities_text = ""
     for activity in available_activities:
@@ -172,15 +176,27 @@ Available Exercises:
             prompt += "\n(No previous confirmed plan found.)\n"
 
     # Add user context
-    if user_data:
+    if user_body_info:
         prompt += f"""
-User information:
-- Age: {user_data.get('age', 'Unknown')}
-- Weight: {user_data.get('weight', 'Unknown')} {user_data.get('weight_unit', 'kg')}
-- Height: {user_data.get('height', 'Unknown')} {user_data.get('height_unit', 'cm')}
-- Fitness Goals: {user_data.get('fitness_goals', 'Not specified')}
-- Health Restrictions: {user_data.get('health_restrictions', 'None mentioned')}
-"""
+    User information (auto-retrieved):
+    - Age: {user_body_info.age}
+    - Weight: {user_body_info.weight} kg
+    - Height: {user_body_info.height} cm
+    - Gender: {user_body_info.gender}
+    - Fitness Goals: {user_body_info.fitness_goal.replace('_', ' ').title()}
+    """
+    elif user_data:
+        prompt += f"""
+    User information:
+    - Age: {user_data.get('age', 'Unknown')}
+    - Weight: {user_data.get('weight', 'Unknown')} {user_data.get('weight_unit', 'kg')}
+    - Height: {user_data.get('height', 'Unknown')} {user_data.get('height_unit', 'cm')}
+    - Fitness Goals: {user_data.get('fitness_goals', 'Not specified')}
+    - Health Restrictions: {user_data.get('health_restrictions', 'None mentioned')}
+    """
+        
+    if user_body_info:
+        print(f"[DEBUG] Loaded body info for user {request.user.username}")
 
     # Add dietary restrictions
     if dietary_restrictions:
