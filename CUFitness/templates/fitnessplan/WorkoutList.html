@@ -1,27 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - FitnessPlan{% endblock %}
+{% block title %}All Workouts - CUFitness{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">💪 All Workouts</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">🔙 Return to Dashboard</a>
+    </div>
 
-<html>
-
-<head>
-    <title>All The Workouts</title>
-</head>
-
-<body>
-    <h1>All The Workouts</h1>
-    <ul>
+    {% if workouts %}
+    <div class="list-group">
         {% for workout in workouts %}
-        <li>
-            <a href="{% url 'workout-detail' workout.id %}">{{ workout.workout_name }}</a>
-        </li>
-        {% empty %}
-        <li>There is no any Workout</li>
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="fs-5">{{ workout.workout_name }}</span>
+            <a href="{% url 'workout-detail' workout.id %}" class="btn btn-primary">View</a>
+        </div>
         {% endfor %}
-    </ul>
-</body>
-
-</html>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        🚫 No workouts found. <a href="{% url 'workout-create' %}">Create one</a> to get started!
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

@@ -3,18 +3,61 @@
 {% block title %}Dashboard - FitnessPlan{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🧬 Your Body Information</h2>
 
-<h2>Input Your Body Information</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-success">Generate Fitness Plan</button>
-</form>
+    {% if current_info %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <p><strong>Height:</strong> {{ current_info.height }} cm</p>
+                <p><strong>Weight:</strong> {{ current_info.weight }} kg</p>
+                <p><strong>Age:</strong> {{ current_info.age }} years</p>
+                <p><strong>Gender:</strong> {{ current_info.gender }}</p>
+                <p><strong>Fitness Goal:</strong> {{ current_info.fitness_goal }}</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">You have not set your body information yet.</div>
+    {% endif %}
 
-{% if form.non_field_errors %}
-  <div style="color: red;">
-    {{ form.non_field_errors }}
-  </div>
+    <div class="d-flex justify-content-between mb-4">
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editForm">
+            ✏️ Edit Info
+        </button>
+        <form method="post" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="generate_plan" value="true">
+            <button type="submit" class="btn btn-success">📈 Generate Fitness Plan</button>
+        </form>
+    </div>
 
-{% endif %}
+    <div class="collapse" id="editForm">
+        <div class="card card-body shadow-sm">
+            <form method="post">
+                {% csrf_token %}
+              
+                {% for field in form %}
+                  <div class="mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                      <div class="text-danger">{{ field.errors }}</div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="submit" name="save_info" class="btn btn-secondary">💾 Save Info</button>
+                </div>
+              </form>
+              
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger mt-3">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

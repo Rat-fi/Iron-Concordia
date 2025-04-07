@@ -8,51 +8,69 @@ from ..models.PersonalizedPlan import  FitnessPlan
 
 @login_required
 def collect_user_info_view(request):
+    user = request.user
+    try:
+        existing_info = user.body_info  # from OneToOneField relation
+    except:
+        existing_info = None
+
     if request.method == 'POST':
-        form = UserInfoForm(request.POST)
+        # Distinguish between save and generate
+        generate = 'generate_plan' in request.POST
+
+        form = UserInfoForm(request.POST, instance=existing_info)
         if form.is_valid():
-            user_data = form.cleaned_data
-            
-            payload = {
-                "age": user_data['age'],
-                "weight": user_data['weight'],
-                "height": user_data['height'],
-                "fitness_goal": user_data['goal'],
-                "gender": user_data['gender']
-            }
-            
-            try:
-                ai_url = "http://127.0.0.1:8000/Agent/generate_plan/"
-                cookies = {
-                    'csrftoken': request.COOKIES.get('csrftoken', ''),
-                    'sessionid': request.COOKIES.get('sessionid', ''),
+            user_info = form.save(commit=False)
+            user_info.user = user
+            user_info.save()
+
+            if generate:
+                payload = {
+                    "age": user_info.age,
+                    "weight": user_info.weight,
+                    "height": user_info.height,
+                    "fitness_goal": user_info.fitness_goal,
+                    "gender": user_info.gender
                 }
-                headers = {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": cookies['csrftoken'],
+
+                try:
+                    ai_url = "http://127.0.0.1:8000/Agent/generate_plan/"
+                    cookies = {
+                        'csrftoken': request.COOKIES.get('csrftoken', ''),
+                        'sessionid': request.COOKIES.get('sessionid', ''),
                     }
-                response = requests.post(ai_url, data=json.dumps(payload), headers=headers, cookies=cookies, timeout=15)
+                    headers = {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": cookies['csrftoken'],
+                    }
 
-                if response.status_code == 200:
-                    data = response.json()
-                    ai_plan = data.get('response', 'No Plan Found')
+                    response = requests.post(ai_url, data=json.dumps(payload), headers=headers, cookies=cookies, timeout=15)
 
-                    fitness_plan, created = FitnessPlan.objects.update_or_create(
-                        user=request.user,
-                        defaults={'plan_content': ai_plan}
-                    )
-                    return redirect('view_plan')
-                else:
-                    form.add_error(None, f"Failed to get AI Plan, Error: {response.status_code}")
-            except requests.RequestException as e:
-                form.add_error(None, f"Failed to get AI Plan, {str(e)}")
+                    if response.status_code == 200:
+                        data = response.json()
+                        ai_plan = data.get('response', 'No Plan Found')
 
-        
-        
+                        FitnessPlan.objects.update_or_create(
+                            user=user,
+                            defaults={'plan_content': ai_plan}
+                        )
+                        return redirect('view_plan')
+                    else:
+                        form.add_error(None, f"Failed to get AI Plan (Error {response.status_code})")
+                except requests.RequestException as e:
+                    form.add_error(None, f"AI request failed: {str(e)}")
+            else:
+                # If just saving user info without generating plan
+                return redirect('collect_user_info')
+
     else:
-        form = UserInfoForm()
+        form = UserInfoForm(instance=existing_info)
 
-    return render(request, 'fitnessplan/collect_user_info.html', {'form': form})
+    return render(request, 'fitnessplan/collect_user_info.html', {
+        'form': form,
+        'current_info': existing_info
+    })
+
     
 
 @login_required

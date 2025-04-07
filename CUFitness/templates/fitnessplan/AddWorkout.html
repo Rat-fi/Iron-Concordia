@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - FitnessPlan{% endblock %}
+{% block title %}Create Workout Plan - CUFitness{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Create Workout Plan</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">🔙 Back to Dashboard</a>
+    </div>
 
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Create Workout Plan</title>
-</head>
-
-<body>
-    <h1>Create Workout Plan</h1>
-
+    <!-- Flash messages -->
     {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-    </ul>
+        </div>
     {% endif %}
 
+    <!-- Form -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Workout Plan</button>
-        <a href="{% url 'dashboard' %}"><button type="button" class="btn btn-danger">Cancel</button></a>
-    </form>
-</body>
-
-</html>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">💾 Save Workout Plan</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-danger">❌ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,36 +1,48 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - FitnessPlan{% endblock %}
+{% block title %}{{ workout.workout_name }} - CUFitness{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <!-- Header and Back Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{{ workout.workout_name }}</h2>
+        <a href="{% url 'workout-list' %}" class="btn btn-outline-secondary">🔙 Back to All Workouts</a>
+    </div>
 
-<html>
-<head>
-    <title>{{ workout.workout_name }} - Detail</title>
-</head>
-<body>
-    <h1>{{ workout.workout_name }}</h1>
-    <p><strong>Duration: </strong>{{ workout.duration }} minutes</p>
-    <p><strong>Description: </strong>{{ workout.description }}</p>
-    <p><strong>Intensity: </strong>{{ workout.intensity_level }}</p>
-    <p><strong>Category: </strong>{{ workout.category }}</p>
-    <p><strong>Total Calories: </strong>{{ workout.calories }}</p>
+    <!-- Workout Info -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <p><strong>🕒 Duration:</strong> {{ workout.duration }} minutes</p>
+            <p><strong>📋 Description:</strong> {{ workout.description }}</p>
+            <p><strong>🔥 Intensity:</strong> {{ workout.intensity_level }}</p>
+            <p><strong>🏷️ Category:</strong> {{ workout.category }}</p>
+            <p><strong>⚡ Total Calories:</strong> {{ workout.calories }}</p>
+        </div>
+    </div>
 
-    <h2>Included Exercises</h2>
-    <ul>
-        {% for exercise in workout.exercise.all %}
-        <li>
-            <strong>Name: </strong>{{ exercise.name }}<br>
-            <strong>Description: </strong>{{ exercise.description }}<br>
-            <strong>Duration: </strong>{{ exercise.duration }} minutes<br>
-            <strong>Intensity: </strong>{{ exercise.intensity_level }}<br>
-            <strong>Category: </strong>{{ exercise.category }}<br>
-            <strong>Calories: </strong>{{ exercise.calories }}
-        </li>
-    {% empty %}
-        <li>There is no any exercise in this Workout</li>
-        {% endfor %}
-    </ul>
+    <!-- Exercises Section -->
+    <h4 class="mb-3">🏋️ Included Exercises</h4>
+    {% if workout.exercise.all %}
+        <div class="list-group mb-4">
+            {% for exercise in workout.exercise.all %}
+                <div class="list-group-item">
+                    <h5 class="mb-1">{{ exercise.name }}</h5>
+                    <p class="mb-1">{{ exercise.description }}</p>
+                    <ul class="mb-0 small">
+                        <li>🕒 Duration: {{ exercise.duration }} mins</li>
+                        <li>🔥 Intensity: {{ exercise.intensity_level }}</li>
+                        <li>🏷️ Category: {{ exercise.category }}</li>
+                        <li>⚡ Calories: {{ exercise.calories }}</li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">There are no exercises in this workout.</div>
+    {% endif %}
 
-    <a href="{% url 'workout-edit' workout.id %}"><button type="button" class="btn btn-warning">Edit Workout</button></a>
+    <!-- Edit Button -->
+    <a href="{% url 'workout-edit' workout.id %}" class="btn btn-warning">✏️ Edit Workout</a>
+</div>
 {% endblock %}

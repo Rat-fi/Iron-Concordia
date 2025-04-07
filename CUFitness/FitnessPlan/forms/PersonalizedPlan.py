@@ -1,21 +1,17 @@
 from django import forms
-from django.core.validators import MinValueValidator
+from ..models.PersonalizedPlan import UserBodyInfo  # Adjust the import if needed
 
-class UserInfoForm(forms.Form):
-    GENDER_CHOICES =[
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
-    ]
-
-    GOAL_CHOICES = [
-        ('Lose Weight', 'Lose Weight'),
-        ('Gain Muscle', 'Gain Muscle'),
-        ('Stay Fit', 'Stay Fit'),
-    ]
-
-    weight = forms.FloatField(label='Weight (kg)', required=True, validators=[MinValueValidator(0)])
-    height = forms.FloatField(label='Height (cm)', required=True, validators=[MinValueValidator(0)])
-    age = forms.IntegerField(label='Age', required=True, validators=[MinValueValidator(0)])
-    gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES, required=True)
-    goal = forms.ChoiceField(label='Goal', choices=GOAL_CHOICES, required=True)
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserBodyInfo
+        fields = ['age', 'weight', 'height', 'gender', 'fitness_goal']
+        labels = {
+            'fitness_goal': 'Fitness Goal',
+        }
+        widgets = {
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'weight': forms.NumberInput(attrs={'class': 'form-control'}),
+            'height': forms.NumberInput(attrs={'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'fitness_goal': forms.Select(attrs={'class': 'form-control'}),
+        }
