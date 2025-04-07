@@ -1,14 +1,10 @@
 | NAME| GitHub NAME | STUDENT ID |
-
 | ---- | -------- | --------- |
-
 | Raphael deyo | Rat-fi | 40166562 |
-
 | Kaiyu Nie | chemoautotroph | 40121808 |
-
 | Li An | LI-AN-Morty | 40309778 |
 
-  
+---
   
 
 CUFitness is a Django-based AI-powered virtual fitness & nutrition assistant designed to help users build personalized health plans using natural language. It leverages Google Gemini for intelligent conversation and interacts with multiple health, meal, and activity models to create and track goals.
@@ -125,18 +121,7 @@ python manage.py runserver
 
 Open http://127.0.0.1:8000/chat/ to interact with the AI.
 
-  
-
-Provide your health data or goals.
-
-  
-
-Receive a full fitness + nutrition plan.
-
-  
-
-Reply with "confirm plan" to track it inside your GymGoal.
-
+Have fun !! 
   
 
 ---
