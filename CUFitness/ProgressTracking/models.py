@@ -75,6 +75,18 @@ exercises = [
     ('crossfit', 'CrossFit'),
     ('stretching', 'Stretching'),
     ('elliptical_trainer', 'Elliptical Trainer'),
+
+    ('kickboxing', 'Kickboxing'),
+    ('calisthenics', 'Calisthenics'),
+    ('tai_chi', 'Tai Chi'),
+    ('mountain_climbers', 'Mountain Climbers'),
+    ('trx_training', 'TRX Training'),
+    ('power_yoga', 'Power yoga'),
+    ('hiking', 'Hiking'),
+    ('sled_push', 'Sled Push'),
+    ('water_aerobics', 'Water Aerobics'),
+    ('zumba', 'Zumba'),
+    ('jump_rope', 'Jump Rope'),
 ]
 
 class ExerciseSession(models.Model):
@@ -105,7 +117,20 @@ class FitnessActivity(models.Model):
         ('crossfit', 'CrossFit'),
         ('stretching', 'Stretching'),
         ('elliptical_trainer', 'Elliptical Trainer'),
+
+        ('kickboxing', 'Kickboxing'),
+        ('calisthenics', 'Calisthenics'),
+        ('tai_chi', 'Tai Chi'),
+        ('mountain_climbers', 'Mountain Climbers'),
+        ('trx_training', 'TRX Training'),
+        ('power_yoga', 'Power yoga'),
+        ('hiking', 'Hiking'),
+        ('sled_push', 'Sled Push'),
+        ('water_aerobics', 'Water Aerobics'),
+        ('zumba', 'Zumba'),
+        ('jump_rope', 'Jump Rope'),
     ]
+
 
     DIFFICULTY_CHOICES = [
         ('easy', 'Easy'),
