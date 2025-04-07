@@ -4,7 +4,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import ChatMessage
 from ProgressTracking.models import FitnessActivity
 from MealPlan.models.DietaryRestrictions import DietaryRestrictions, DietaryRestrictions_MealPlan
-from MealPlan.models.QuickMeal import QuickMeal
 from MealPlan.models.NewCookUser import MealInstructions
 from MealPlan.models.CampusOptions import CampusOptions_MenuItem, CampusOptions_Restaurant
 from .models import FitnessPlan

@@ -1,26 +1,4 @@
 {
-    "budget_meal": [
-      {
-        "name": "Grilled Chicken",
-        "price": 18.88
-      },
-      {
-        "name": "Caesar Salad",
-        "price": 11.00
-      },
-      {
-        "name": "Tofu Stir Fry",
-        "price": 13.50
-      },
-      {
-        "name": "Steak",
-        "price": 26.99
-      },
-      {
-        "name": "Vegan Burger",
-        "price": 12.50
-      }
-    ],
     "MealPlan_campusoptions_menuitem":[
         {
             "name": "Chicken Burger",

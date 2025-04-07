@@ -19,4 +19,3 @@ class UserInfoForm(forms.Form):
     age = forms.IntegerField(label='Age', required=True, validators=[MinValueValidator(0)])
     gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES, required=True)
     goal = forms.ChoiceField(label='Goal', choices=GOAL_CHOICES, required=True)
-    dietary_restrictions = forms.CharField(label='Dietary Restrictions', required=False)

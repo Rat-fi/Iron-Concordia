@@ -1,30 +1,57 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - CUFitness{% endblock %}
+{% block title %}Dietary Preferences - CUFitness{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+    <h2 class="text-center mb-4">🥦 Set Your Dietary Preferences</h2>
+    <p class="text-muted text-center">These preferences will help personalize your meal recommendations.</p>
 
-<h2>Set Your Dietary Restrictions</h2>
-<p>Select your dietary restrictions below. Your meal plan will be filtered accordingly.</p>
+    <div class="card shadow-sm p-4">
+        <form method="post">
+            {% csrf_token %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+            <!-- Dietary Restriction Fields -->
+            <div class="row">
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'meal_plans' %}
+                        <div class="col-md-4 mb-3">
+                            <div class="form-check">
+                                {{ field }}
+                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-    <h3>Select Meal Plans:</h3>
-    <ul>
-        {% for meal in form.meal_plans.field.queryset %}
-            <li>
-                <label>
-                    <input type="checkbox" name="{{ form.meal_plans.name }}" value="{{ meal.id }}"
-                        {% if meal in form.meal_plans.value %}checked{% endif %}>
-                    {{ meal.name }} - {{ meal.calories }} kcal, {{ meal.protein }}g protein
-                </label>
-            </li>
-        {% endfor %}
-    </ul>
+            <hr class="my-4">
 
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+            <!-- Meal Plan Selection -->
+            <h5 class="mb-3">🍱 Choose Preferred Meal Plans</h5>
+            <p class="text-muted">You can select one or more meal plans that match your goals and preferences:</p>
+            <div class="row">
+                {% for meal in form.meal_plans.field.queryset %}
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check border rounded p-3 bg-light">
+                            <input type="checkbox" class="form-check-input" id="meal_{{ meal.id }}"
+                                   name="{{ form.meal_plans.name }}" value="{{ meal.id }}"
+                                   {% if meal in form.meal_plans.value %}checked{% endif %}>
+                            <label class="form-check-label" for="meal_{{ meal.id }}">
+                                <strong>{{ meal.name }}</strong> <br>
+                                <small>{{ meal.calories }} kcal | {{ meal.protein }}g protein</small>
+                            </label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
 
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success px-4">💾 Save Preferences</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

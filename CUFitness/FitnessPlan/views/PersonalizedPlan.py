@@ -18,8 +18,7 @@ def collect_user_info_view(request):
                 "weight": user_data['weight'],
                 "height": user_data['height'],
                 "fitness_goal": user_data['goal'],
-                "gender": user_data['gender'],
-                "dietary_restrictions": user_data['dietary_restrictions'],
+                "gender": user_data['gender']
             }
             
             try:
