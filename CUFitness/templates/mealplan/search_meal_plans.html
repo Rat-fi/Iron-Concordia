@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Search Meal Plans{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🔍 Search Meal Plans</h2>
+
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="q" class="form-control" placeholder="Search by name or description"
+                value="{{ query }}">
+        </div>
+        <div class="col-md-2">
+            <select name="difficulty" class="form-select">
+                <option value="">Any Difficulty</option>
+                <option value="Easy" {% if difficulty == "Easy" %}selected{% endif %}>Easy</option>
+                <option value="Medium" {% if difficulty == "Medium" %}selected{% endif %}>Medium</option>
+                <option value="Hard" {% if difficulty == "Hard" %}selected{% endif %}>Hard</option>
+            </select>
+        </div>
+        <div class="col-md-2"><input type="number" name="cal_min" class="form-control" placeholder="Min Calories" value="{{ cal_min }}"></div>
+        <div class="col-md-2"><input type="number" name="cal_max" class="form-control" placeholder="Max Calories" value="{{ cal_max }}"></div>
+        <div class="col-md-2"><input type="number" name="protein_min" class="form-control" placeholder="Min Protein" value="{{ protein_min }}"></div>
+        <div class="col-md-2"><input type="number" name="protein_max" class="form-control" placeholder="Max Protein" value="{{ protein_max }}"></div>
+
+        <hr class="my-4">
+        <h5>🥗 Dietary Filters (Exclude meals that contain...)</h5>
+        <div class="row g-2">
+            {% for field in dietary_fields %}
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="{{ field }}" id="{{ field }}"
+                        {% if field in checked_fields %}checked{% endif %}>
+                    <label class="form-check-label" for="{{ field }}">{{ field|title }}</label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <hr class="my-4">
+        <h5>🌱 Special Diets</h5>
+        <div class="row g-2">
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_vegetarian" id="is_vegetarian"
+                        {% if "is_vegetarian" in checked_fields %}checked{% endif %}>
+                    <label class="form-check-label" for="is_vegetarian">Vegetarian Only</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_vegan" id="is_vegan"
+                        {% if "is_vegan" in checked_fields %}checked{% endif %}>
+                    <label class="form-check-label" for="is_vegan">Vegan Only</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 text-end mt-3">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </div>
+    </form>
+
+    {% if meal_plans %}
+    <div class="row">
+        {% for meal in meal_plans %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ meal.name }}</h5>
+                    <p class="card-text">{{ meal.description|truncatechars:150 }}</p>
+                    <ul class="list-unstyled small">
+                        <li>🔥 Calories: {{ meal.calories }} kcal</li>
+                        <li>💪 Protein: {{ meal.protein }} g</li>
+                        <li>⏱️ Prep Time: {{ meal.prepare_time }} mins</li>
+                        <li>📊 Difficulty: {{ meal.difficulty }}</li>
+                        <li>💰 Price: ${{ meal.price }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">No meal plans found. Try adjusting your filters.</div>
+    {% endif %}
+</div>
+{% endblock %}

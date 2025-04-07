@@ -84,20 +84,16 @@
 
                     <!-- Subgroup: Meal Planning -->
                     <div class="d-grid gap-2 mt-2">
-                        <a href="{% url 'MealPlan_Searchbar' %}" class="btn btn-outline-primary">🔍 MealPlan
-                            Searchbar</a>
-                        <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-outline-primary">🚫 Set Dietary
-                            Restrictions</a>
-                        <a href="{% url 'meal_plan' %}" class="btn btn-outline-primary">🗓️ Full Meal Plan</a>
+                        <a href="{% url 'set_dietary_restrictions' %}" class="btn btn-outline-primary">🚫 Set Dietary Restrictions</a>
+                        <a href="{% url 'create_meal_plan' %}" class="btn btn-outline-primary">🗓️ My Meal Plans</a>
+                        <a href="{% url 'search_meal_plans' %}" class="btn btn-outline-primary">📜 View Available Meal Plans</a>
                     </div>
 
                     <!-- Subgroup: Dining & Cooking -->
                     <hr>
                     <h6 class="text-muted mt-3">🏫 Campus & Cooking</h6>
                     <div class="d-grid gap-2 mt-2">
-                        <a href="{% url 'campus_options' %}" class="btn btn-outline-success">🏫 Campus Dining
-                            Options</a>
-                        <a href="{% url 'newcookuser_list' %}" class="btn btn-outline-success">🍳 Meal Instructions</a>
+                        <a href="{% url 'campus_options' %}" class="btn btn-outline-success">🏫 Campus Dining Options</a>
                     </div>
                 </div>
             </div>

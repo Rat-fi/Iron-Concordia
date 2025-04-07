@@ -4,7 +4,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import ChatMessage
 from ProgressTracking.models import FitnessActivity
 from MealPlan.models.DietaryRestrictions import DietaryRestrictions, DietaryRestrictions_MealPlan
-from MealPlan.models.NewCookUser import MealInstructions
 from MealPlan.models.CampusOptions import CampusOptions_MenuItem, CampusOptions_Restaurant
 from .models import FitnessPlan
 from ProgressTracking.models import GymGoal
@@ -352,7 +351,7 @@ def new_chat(request):
 
             activity_types = FitnessActivity.objects.values_list('exercise_type', flat=True).distinct()
             activity_list = ", ".join([activity.replace('_', ' ').title() for activity in activity_types])
-            home_meals_count = MealInstructions.objects.count()
+            home_meals_count = DietaryRestrictions_MealPlan.objects.count()
             restaurant_count = CampusOptions_Restaurant.objects.count()
 
             welcome_message = f"""Hi! I'm your fitness and nutrition AI coach. 

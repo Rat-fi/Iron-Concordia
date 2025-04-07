@@ -5,9 +5,20 @@ from django.core.validators import MinValueValidator
 class DietaryRestrictions_MealPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
+    
     calories = models.PositiveIntegerField(help_text="Calories per serving")
     protein = models.FloatField(validators=[MinValueValidator(0)], help_text="Protein in grams")
+    price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)], default=0, help_text="Meal price in dollars")
+    prepare_time = models.PositiveIntegerField(default=0, help_text="Preparation time in minutes")
     
+    difficulty = models.CharField(max_length=50, choices=[
+        ('Easy', 'Easy'),
+        ('Medium', 'Medium'),
+        ('Hard', 'Hard')
+    ], default='Easy')
+
+    steps = models.TextField(default='', help_text="Step-by-step preparation instructions")
+
     is_vegetarian = models.BooleanField(default=False)
     is_vegan = models.BooleanField(default=False)
     contains_gluten = models.BooleanField(default=False)
