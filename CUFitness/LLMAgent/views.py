@@ -37,11 +37,11 @@ def get_available_activities():
     
     return list(activities)
 
-def get_user_dietary_restrictions(user_id=None):
-    """Get user's dietary restrictions if available"""
+def get_user_dietary_restrictions(request):
+    """Get user's dietary restrictions using related_name access"""
     try:
-        if user_id:
-            restrictions = DietaryRestrictions.objects.filter(user_id=user_id).first()
+        if request.user.is_authenticated:
+            restrictions = getattr(request.user, 'dietary_restrictions', None)
             if restrictions:
                 return {
                     'is_vegetarian': restrictions.is_vegetarian,
@@ -58,7 +58,7 @@ def get_user_dietary_restrictions(user_id=None):
                     'is_poultry_free': restrictions.is_poultry_free
                 }
     except Exception as e:
-        print(f"Error fetching dietary restrictions: {e}")
+        print(f"[ERROR] Could not retrieve dietary restrictions: {e}")
     
     return None
 
@@ -109,16 +109,20 @@ def get_restaurant_options():
     
     return restaurant_data
 
-def generate_fitness_response(conversation_history, user_data=None):
+def generate_fitness_response(request, conversation_history, user_data=None):
     """Generate a response using Gemini 1.5 Flash with constraints from the database"""
     available_activities = get_available_activities()
     available_meal_plans = get_available_meal_plans()
     restaurant_options = get_restaurant_options()
-    
+
+    dietary_restrictions = get_user_dietary_restrictions(request)
+
+    # Assemble activities section
     activities_text = ""
     for activity in available_activities:
         activities_text += f"- {activity['exercise_type']} ({activity['difficulty_level']}): {activity['description'] or 'No description available'}\n"
-    
+
+    # Assemble meal plans section
     meal_plans_text = ""
     for meal in available_meal_plans:
         restrictions = []
@@ -137,13 +141,15 @@ def generate_fitness_response(conversation_history, user_data=None):
         
         restrictions_str = ", ".join(restrictions) if restrictions else "No specific restrictions"
         meal_plans_text += f"- {meal['name']}: {meal['calories']} calories, {meal['protein']}g protein. Dietary info: {restrictions_str}. {meal['description'] or 'No description available'}\n"
-    
+
+    # Assemble restaurant section
     restaurant_text = ""
     for restaurant in restaurant_options:
         restaurant_text += f"- {restaurant['name']} (Rating: {restaurant['rating']})\n"
         for item in restaurant['menu_items']:
             restaurant_text += f"  * {item['name']} ({item['category']}): ${item['price']}, Dietary type: {item['dietary_restrictions']}\n"
-    
+
+    # Assemble base prompt
     prompt = """You are a professional fitness and nutrition coach AI assistant. 
 Provide personalized workout plans, nutrition advice, meal recommendations, and fitness guidance.
 Be encouraging, specific, and considerate of the user's goals, dietary restrictions, and limitations.
@@ -155,27 +161,18 @@ IMPORTANT RULES:
 4. Be specific when referencing meals or exercises - use the exact names from the lists.
 
 Available Exercises:
-"""
-    
-    prompt += activities_text
-    
-    prompt += "\nAvailable Meal Plans:\n"
-    prompt += meal_plans_text
-    
-    prompt += "\nRestaurant Options:\n"
-    prompt += restaurant_text
-    
-    if user_data and user_data.get('user_id'):
+""" + activities_text + "\nAvailable Meal Plans:\n" + meal_plans_text + "\nRestaurant Options:\n" + restaurant_text
+
+    # Add previous confirmed plan
+    if user_data and request.user.is_authenticated:
         try:
-            last_plan = FitnessPlan.objects.filter(user_id=user_data['user_id'], confirmed=True).latest('created_at')
-            prompt += "\nPrevious Confirmed Fitness Plan:\n"
-            prompt += last_plan.plan_content + "\n"
+            last_plan = FitnessPlan.objects.filter(user=request.user, confirmed=True).latest('created_at')
+            prompt += "\nPrevious Confirmed Fitness Plan:\n" + last_plan.plan_content + "\n"
         except FitnessPlan.DoesNotExist:
             prompt += "\n(No previous confirmed plan found.)\n"
-        dietary_restrictions = None
-        if user_data.get('user_id'):
-            dietary_restrictions = get_user_dietary_restrictions(user_data.get('user_id'))
-        
+
+    # Add user context
+    if user_data:
         prompt += f"""
 User information:
 - Age: {user_data.get('age', 'Unknown')}
@@ -184,25 +181,22 @@ User information:
 - Fitness Goals: {user_data.get('fitness_goals', 'Not specified')}
 - Health Restrictions: {user_data.get('health_restrictions', 'None mentioned')}
 """
-        
-        if dietary_restrictions:
-            prompt += "Dietary Restrictions:\n"
-            for restriction, value in dietary_restrictions.items():
-                if value:
-                    prompt += f"- {restriction.replace('_', ' ').replace('is ', '')}\n"
-        elif user_data.get('dietary_restrictions'):
-            prompt += f"Dietary Restrictions: {user_data.get('dietary_restrictions')}\n"
-    
+
+    # Add dietary restrictions
+    if dietary_restrictions:
+        prompt += "Dietary Restrictions:\n"
+        for restriction, value in dietary_restrictions.items():
+            if value:
+                prompt += f"- {restriction.replace('_', ' ').replace('is ', '')}\n"
+    elif user_data and user_data.get('dietary_restrictions'):
+        prompt += f"Dietary Restrictions: {user_data.get('dietary_restrictions')}\n"
+
+    # Add last conversation
     prompt += "\nPrevious conversation:\n"
     recent_history = conversation_history[-5:] if len(conversation_history) > 5 else conversation_history
     for entry in recent_history:
-        if entry["role"] == "user":
-            prompt += f"User: {entry['message']}\n"
-        else:
-            prompt += f"AI: {entry['message']}\n"
-    
-    prompt += "\nRespond to the user's last message as a helpful fitness and nutrition coach. Remember to ONLY suggest exercises and meals from the lists provided above. When recommending meals, be careful to respect any dietary restrictions the user has mentioned:"
-    
+        prompt += f"{entry['role'].capitalize()}: {entry['message']}\n"
+
     prompt += """
 Now respond to the user based on their last question.
 Keep your reply structured and helpful.
@@ -215,7 +209,8 @@ End your reply by asking if they're satisfied with the plan, and remind them the
         return response.text
     except Exception as e:
         print(f"Error generating response: {e}")
-        return f"I'm sorry, I encountered an error while generating a response. Please try again."
+        return "⚠️ Sorry, I had an issue generating your plan. Please try again later."
+
 
 @ensure_csrf_cookie
 def chat(request):
@@ -304,7 +299,7 @@ def chat(request):
                     ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
                 )
 
-            ai_response = generate_fitness_response(history)
+            ai_response = generate_fitness_response(request, history)
             if not any(x in ai_response.lower() for x in [
                     "reply with 'confirm plan'",
                     "reply 'confirm plan'",
@@ -422,7 +417,7 @@ def generate_fitness_plan(request):
                     ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
                 )
 
-            ai_response = generate_fitness_response(history, user_data)
+            ai_response = generate_fitness_response(request, history)
             ChatMessage.objects.create(
                 session_key=session_key,
                 user=request.user if request.user.is_authenticated else None,
@@ -482,7 +477,7 @@ def recommend_meals(request):
                     ChatMessage.objects.filter(session_key=session_key).order_by('timestamp').values('role', 'message')
                 )
 
-            ai_response = generate_fitness_response(history, user_data)
+            ai_response = generate_fitness_response(request, history, user_data)
             ChatMessage.objects.create(
                 session_key=session_key,
                 user=request.user if request.user.is_authenticated else None,
