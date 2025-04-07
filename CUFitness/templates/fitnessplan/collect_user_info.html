@@ -24,33 +24,28 @@
         <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editForm">
             ✏️ Edit Info
         </button>
-        <form method="post" class="d-inline">
-            {% csrf_token %}
-            <input type="hidden" name="generate_plan" value="true">
-            <button type="submit" class="btn btn-success">📈 Generate Fitness Plan</button>
-        </form>
     </div>
 
-    <div class="collapse" id="editForm">
+    <div class="collapse show" id="editForm">
         <div class="card card-body shadow-sm">
             <form method="post">
                 {% csrf_token %}
               
                 {% for field in form %}
-                  <div class="mb-3">
+                <div class="mb-3">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
-                      <div class="text-danger">{{ field.errors }}</div>
+                    <div class="text-danger">{{ field.errors }}</div>
                     {% endif %}
-                  </div>
+                </div>
                 {% endfor %}
               
                 <div class="d-flex justify-content-between mt-4">
-                  <button type="submit" name="save_info" class="btn btn-secondary">💾 Save Info</button>
+                    <button type="submit" name="save_info" class="btn btn-secondary">💾 Save Info</button>
+                    <button type="submit" name="generate_plan" value="true" class="btn btn-success">📈 Regenerate Fitness Plan</button>
                 </div>
-              </form>
-              
+            </form>
         </div>
     </div>
 

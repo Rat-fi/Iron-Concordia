@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard - FitnessPlan{% endblock %}
-{% block content %}
-<h2>Your Personalized Fitness Plan</h2>
 
-{% if fitness_plan %}
-<pre>{{ fitness_plan.plan_content }}</pre>
-<a href="{% url 'adjust_plan' %}"><button type="button" class="btn btn-primary mt-3">Edit Plan</button></a>
-<a href="{% url 'collect_user_info' %}"><button type="button" class="btn btn-primary mt-3">Regenerate Plan</button></a>
-{% else %}
-<p>You have not generated a fitness plan yet.</p>
-<a href="{% url 'collect_user_info' %}"><button type="button" class="btn btn-success">Generate Now</button></a>
-{% endif %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🏋️ Your Personalized Fitness Plan</h2>
+
+    {% if fitness_plan %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <pre class="mb-0" style="white-space: pre-wrap;">{{ fitness_plan.plan_content }}</pre>
+        </div>
+    </div>
+    <div class="d-flex gap-3">
+        <a href="{% url 'adjust_plan' %}" class="btn btn-warning">✏️ Edit Plan</a>
+        <a href="{% url 'collect_user_info' %}" class="btn btn-outline-primary">🔄 Regenerate Plan</a>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <p class="mb-2">You have not generated a fitness plan yet.</p>
+        <a href="{% url 'collect_user_info' %}" class="btn btn-success">🚀 Generate Now</a>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
