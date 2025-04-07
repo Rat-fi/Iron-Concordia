@@ -1,54 +1,66 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - CUFitness{% endblock %}
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Today's Exercise Records</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body { background-color: #f8f9fa; padding-top: 30px; }
-    .record-table { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  </style>
-</head>
+{% block title %}Today's Exercise Records - CUFitness{% endblock %}
 
 {% block content %}
-<body>
-<div class="container">
-  <h1 class="text-center mb-4">Today's Exercise Records ({{ today }})</h1>
-  <div class="record-table">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Exercise Type</th>
-          <th>Duration (sec)</th>
-          <th>Time Recorded</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for record in records %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .record-section {
+    margin-top: 40px;
+  }
+  .record-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  .table th, .table td {
+    vertical-align: middle;
+  }
+</style>
+
+<div class="container record-section">
+  <h2 class="text-center mb-4">🏋️‍♀️ Exercise Records for <strong>{{ today }}</strong></h2>
+
+  <div class="record-card">
+    {% if records %}
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>Exercise</th>
+            <th>Duration (sec)</th>
+            <th>Recorded At</th>
+            <th style="width: 150px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
           <tr>
             <td>{{ record.get_exercise_type_display }}</td>
             <td>{{ record.exercise_time }}</td>
             <td>{{ record.recorded_at|date:"H:i:s" }}</td>
             <td>
-              <a href="{% url 'edit_exercise_record' record.id %}" class="btn btn-primary btn-sm">Edit</a>
-              <form action="{% url 'remove_exercise_record' record.id %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-              </form>
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'edit_exercise_record' record.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form action="{% url 'remove_exercise_record' record.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+              </div>
             </td>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4" class="text-center">No exercise records for today.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <div class="alert alert-warning text-center">
+        You haven't recorded any exercise today. Start tracking to see results here!
+      </div>
+    {% endif %}
   </div>
 </div>
-</body>
-</html>
 {% endblock %}

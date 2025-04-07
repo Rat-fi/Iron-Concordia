@@ -1,42 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - CUFitness{% endblock %}
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Edit Exercise Record</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body { background-color: #f8f9fa; padding-top: 30px; }
-    .edit-form { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  </style>
-</head>
+{% block title %}Edit Exercise Record - CUFitness{% endblock %}
 
 {% block content %}
-<body>
-<div class="container">
-  <h1 class="text-center mb-4">Edit Exercise Record</h1>
-  <div class="edit-form">
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="exercise_type">Exercise Type:</label>
-        <select id="exercise_type" name="exercise_type" class="form-control">
-          {% for value, label in exercise_choices %}
-            <option value="{{ value }}" {% if record.exercise_type == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="exercise_time">Duration (in seconds):</label>
-        <input type="number" name="exercise_time" id="exercise_time" class="form-control"
-               value="{{ record.exercise_time }}" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-      <a href="{% url 'today_exercise_records' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">✏️ Edit Exercise Record</h3>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="exercise_type" class="form-label">Exercise Type</label>
+                            <select id="exercise_type" name="exercise_type" class="form-select" required>
+                                {% for value, label in exercise_choices %}
+                                    <option value="{{ value }}" {% if record.exercise_type == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exercise_time" class="form-label">Duration</label>
+                            <div class="input-group">
+                                <input type="number" name="exercise_time" id="exercise_time" class="form-control" min="0" required value="{{ record.exercise_time }}">
+                                <span class="input-group-text">sec</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'today_exercise_records' %}" class="btn btn-outline-secondary">← Cancel</a>
+                            <button type="submit" class="btn btn-success">💾 Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
 {% endblock %}

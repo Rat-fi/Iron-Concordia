@@ -1,52 +1,72 @@
 {% extends "base.html" %}
-
 {% load dict_extras %}
 
 {% block title %}Set Your Gym Goals - CUFitness{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-10">
-      <div class="gym-goal-form">
-        <h1 class="text-center">Set Your Gym Goals</h1>
+<div class="container mt-4">
+    <div class="gym-goal-form p-4 bg-white shadow rounded">
+        <h1 class="text-center mb-4">Set Your Gym Goals</h1>
+
         {% if message %}
-          <div class="alert alert-success" role="alert">
-            {{ message }}
-          </div>
+        <div class="alert alert-success">{{ message }}</div>
         {% endif %}
         {% if error %}
-          <div class="alert alert-danger" role="alert">
-            {{ error }}
-          </div>
+        <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
+
         <form method="post">
-          {% csrf_token %}
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Exercise</th>
-                <th>Hours per Week</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for field, display in exercises %}
-                <tr>
-                  <td>{{ display }}</td>
-                  <td>
-                    <input type="number" step="0.1" name="{{ field }}" class="form-control" placeholder="e.g. 1.5" required value="{{ goal_values|get_item:field|default:0 }}">
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          <button type="submit" class="btn btn-primary btn-block">Save Gym Goals</button>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-sm">
+                        {% for field, display in exercises|slice:":13" %}
+                        <tr>
+                            <td>{{ display }}</td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="number" step="0.1" name="{{ field }}"
+                                        class="form-control form-control-sm"
+                                        placeholder="e.g. 90" required
+                                        value="{{ goal_values|get_item:field|default:0 }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">hours/week</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-sm">
+                        {% for field, display in exercises|slice:"13:" %}
+                        <tr>
+                            <td>{{ display }}</td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="number" step="0.1" name="{{ field }}"
+                                        class="form-control form-control-sm"
+                                        placeholder="e.g. 90" required
+                                        value="{{ goal_values|get_item:field|default:0 }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">hours/week</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-3">Save Gym Goals</button>
         </form>
+
         {% if gym_goal.goal_date %}
-          <p class="mt-3 text-center">Goal set on: {{ gym_goal.goal_date }}</p>
+        <p class="mt-3 text-center">Goal set on: {{ gym_goal.goal_date }}</p>
         {% endif %}
-      </div>
     </div>
-  </div>
 </div>
 {% endblock %}

@@ -1,53 +1,72 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - CUFitness{% endblock %}
+{% block title %}My Awards & Badges - CUFitness{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Awards and Badges</title>
-</head>
-<body>
-    <h1>My Awards and Badges</h1>
+<style>
+  .section-title {
+    margin: 40px 0 20px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .card-img-top {
+    height: 60px;
+    object-fit: contain;
+    margin: 10px auto 0;
+  }
+  .award-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+</style>
 
-    <h2>Badges</h2>
-    {% if badges %}
-      <ul>
-        {% for user_badge in badges %}
-          <li>
+<div class="container mt-5">
+  <h1 class="text-center mb-5">🏆 My Awards and Badges</h1>
+
+  <!-- Badges Section -->
+  <h2 class="section-title">🏅 Badges</h2>
+  {% if badges %}
+    <div class="row">
+      {% for user_badge in badges %}
+        <div class="col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 text-center">
             {% if user_badge.badge.icon %}
-              <img src="{{ user_badge.badge.icon.url }}" alt="{{ user_badge.badge.name }}" style="height:50px;">
+              <img src="{{ user_badge.badge.icon.url }}" class="card-img-top" alt="{{ user_badge.badge.name }}">
             {% endif %}
-            <strong>{{ user_badge.badge.name }}</strong> - {{ user_badge.badge.description }}
-            <br>
-            Obtained time:{{ user_badge.awarded_at|date:"Y-m-d H:i" }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>Haven't earned the badge yet.</p>
-    {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ user_badge.badge.name }}</h5>
+              <p class="card-text">{{ user_badge.badge.description }}</p>
+              <p class="award-time">🏁 Awarded on: {{ user_badge.awarded_at|date:"Y-m-d H:i" }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted">You haven't earned any badges yet.</p>
+  {% endif %}
 
-    <h2>Awards</h2>
-    {% if awards %}
-      <ul>
-        {% for user_award in awards %}
-          <li>
+  <!-- Awards Section -->
+  <h2 class="section-title">🎖️ Awards</h2>
+  {% if awards %}
+    <div class="row">
+      {% for user_award in awards %}
+        <div class="col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 text-center">
             {% if user_award.award.icon %}
-              <img src="{{ user_award.award.icon.url }}" alt="{{ user_award.award.name }}" style="height:50px;">
+              <img src="{{ user_award.award.icon.url }}" class="card-img-top" alt="{{ user_award.award.name }}">
             {% endif %}
-            <strong>{{ user_award.award.name }}</strong> - {{ user_award.award.description }}
-            <br>
-            Obtained time:{{ user_award.awarded_at|date:"Y-m-d H:i" }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>Haven't earned the award yet.</p>
-    {% endif %}
-
-
-</body>
-</html>
+            <div class="card-body">
+              <h5 class="card-title">{{ user_award.award.name }}</h5>
+              <p class="card-text">{{ user_award.award.description }}</p>
+              <p class="award-time">🏁 Awarded on: {{ user_award.awarded_at|date:"Y-m-d H:i" }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted">You haven't earned any awards yet.</p>
+  {% endif %}
+</div>
 {% endblock %}

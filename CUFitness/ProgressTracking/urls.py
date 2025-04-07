@@ -14,10 +14,6 @@ urlpatterns = [
     path('weeklySummary/', views.weekly_summary, name='weekly_summary'),
     path('monthlySummary/', views.monthly_summary, name='monthly_summary'),
     path('historyActivity/', views.history_activity, name='history_activity'),
-    path('weeklyActivityChart/', views.weekly_activity_chart, name='weekly_activity_chart'),
-
-
-
 
     path('progressTracking/', views.index),
     path('checkHistory/<int:id>/', views.checkHistoryData),
