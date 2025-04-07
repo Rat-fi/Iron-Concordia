@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Workout - CUFitness{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🛠️ Edit Workout Plan</h2>
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field in form %}
+            {% for error in field.errors %}
+            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_workout_name" class="form-label">Workout Name</label>
+            {{ form.workout_name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_duration" class="form-label">Duration (mins)</label>
+            {{ form.duration }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_intensity_level" class="form-label">Intensity</label>
+            {{ form.intensity_level }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_intensity_level" class="form-label">Calories Burned</label>
+            {{ form.calories }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_category" class="form-label">Category</label>
+            {{ form.category }}
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Included Exercises</label>
+            <div class="border rounded p-3" style="max-height: 250px; overflow-y: auto;">
+                {% for exercise in form.exercise.field.queryset %}
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" name="exercise" value="{{ exercise.id }}"
+                        id="exercise_{{ exercise.id }}" {% if exercise in form.initial.exercise %}checked{% endif %}>
+                    <label class="form-check-label" for="exercise_{{ exercise.id }}">
+                        <strong>{{ exercise.name }}</strong> –
+                        {{ exercise.duration }} min,
+                        {{ exercise.calories }} kcal,
+                        {{ exercise.intensity_level }} ({{ exercise.category }})
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'workout-detail' workout.id %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success">💾 Save Changes</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
